@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "target": "ES2019",
+    "noImplicitAny": true,
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "dist",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "node_modules/*",
+      ]
+    },
+    "typeRoots": [
+      "node_modules/@types",
+      "index.d.ts",
+    ],
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    // "strictBindCallApply": true,
+    "lib": ["es2019", "es2020.bigint", "es2020.string", "es2020.symbol.wellknown"]
+  },
+  "include": [
+    "src/**/*"
+  ],
+}
