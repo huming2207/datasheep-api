@@ -64,7 +64,7 @@ export class AuthController {
                     username: user.username,
                     email: user.email,
                 },
-                process.env.PP_JWT_SECRET ? process.env.PP_JWT_SECRET : 'jwtTestToken',
+                process.env.DS_JWT_TOKEN || 'jwtTestToken',
                 {
                     algorithm: 'HS512',
                     expiresIn: '1h',
