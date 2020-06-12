@@ -11,4 +11,4 @@ This project is dual-licensed.
 It can be either:
 
 - GPLv3 + **Not allowed to use for any commercial purposes.**
-- or any commercial licenses approved by the owner of this project (@huming2207)
+- or commercial licenses approved by the owner of this project (@huming2207)
