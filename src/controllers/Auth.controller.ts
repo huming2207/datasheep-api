@@ -8,7 +8,7 @@ import { InternalError } from '../common/Errors';
 import { LoginFormSchema, RegisterFormSchema } from '../schemas/requests/UserAuthSchema';
 
 @Controller({ route: '/api/auth' })
-export class AuthController {
+export default class AuthController {
     @POST({ url: '/register', options: { schema: RegisterFormSchema } })
     userRegister = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
         const username = req.body['username'] as string;
