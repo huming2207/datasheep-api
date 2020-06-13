@@ -17,7 +17,7 @@ const server = fastify({
     },
 });
 
-if (process.env.SYNCIFY_DISABLE_SWAGGER !== 'true') {
+if (process.env.DS_DISABLE_SWAGGER !== 'true') {
     server.register(FastifyOas, {
         routePrefix: '/api/documentation',
         exposeRoute: true,
@@ -58,8 +58,8 @@ connectToDb()
     .then(() => {
         console.log('Database connected, starting Fastify...');
         server.listen(
-            parseInt(process.env.SYNCIFY_PORT || '3000'),
-            process.env.SYNCIFY_ADDR || 'localhost',
+            parseInt(process.env.DS_PORT || '3000'),
+            process.env.DS_ADDR || 'localhost',
             (err, address) => {
                 if (err) {
                     console.error(err);
@@ -71,7 +71,7 @@ connectToDb()
                         console.error(err);
                         process.exit(1);
                     }
-                    if (process.env.SYNCIFY_DISABLE_SWAGGER !== 'true') server.oas();
+                    if (process.env.DS_DISABLE_SWAGGER !== 'true') server.oas();
                 });
                 console.log(`Fastify is listening at ${address}`);
             },
