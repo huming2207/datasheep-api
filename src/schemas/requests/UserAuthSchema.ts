@@ -25,7 +25,7 @@ const RegisterFormSchema: JSONSchema7 = {
 };
 
 export const UserLoginSchema: RouteSchema = {
-    body: RegisterFormSchema,
+    body: LoginFormSchema,
     consumes: ['application/x-www-form-urlencoded'],
     produces: ['application/json'],
     description: 'Register a new user',
@@ -33,7 +33,7 @@ export const UserLoginSchema: RouteSchema = {
 };
 
 export const UserRegisterSchema: RouteSchema = {
-    body: LoginFormSchema,
+    body: RegisterFormSchema,
     consumes: ['application/x-www-form-urlencoded'],
     produces: ['application/json'],
     description: 'User login, and get a new JWT token',
