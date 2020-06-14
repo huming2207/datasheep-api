@@ -3,6 +3,7 @@ import fastify from 'fastify';
 import dotenv from 'dotenv';
 import FastifyOas from 'fastify-oas';
 import FastifyFormBody from 'fastify-formbody';
+import FastifyJwt from 'fastify-jwt';
 import { connectToDb } from './common/Database';
 import { bootstrap } from 'fastify-decorators';
 import { resolve } from 'path';
@@ -46,6 +47,14 @@ if (process.env.DS_DISABLE_SWAGGER !== 'true') {
 }
 
 server.register(FastifyFormBody);
+server.register(FastifyJwt, {
+    secret: process.env.PP_JWT_SECRET ? process.env.PP_JWT_SECRET : 'jwtTestToken',
+    sign: {
+        algorithm: 'HS512',
+        expiresIn: '1h',
+    },
+});
+
 server.register(bootstrap, {
     directory: resolve(__dirname, `controllers`),
     mask: /\.controller\./,
