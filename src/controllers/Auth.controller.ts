@@ -5,11 +5,11 @@ import { Controller, POST } from 'fastify-decorators';
 import { ServerRequest, ServerReply } from 'fastify';
 import { BadRequestError, UnauthorisedError } from '../common/Errors';
 import { InternalError } from '../common/Errors';
-import { LoginFormSchema, RegisterFormSchema } from '../schemas/requests/UserAuthSchema';
+import { UserLoginSchema, UserRegisterSchema } from '../schemas/requests/UserAuthSchema';
 
 @Controller({ route: '/api/auth' })
 export default class AuthController {
-    @POST({ url: '/register', options: { schema: RegisterFormSchema } })
+    @POST({ url: '/register', options: { schema: UserRegisterSchema } })
     userRegister = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
         const username = req.body['username'] as string;
         const password = req.body['password'] as string;
@@ -46,7 +46,7 @@ export default class AuthController {
         }
     };
 
-    @POST({ url: '/login', options: { schema: LoginFormSchema } })
+    @POST({ url: '/login', options: { schema: UserLoginSchema } })
     userLogin = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
         const username = req.body['username'] as string;
         const password = req.body['password'] as string;
