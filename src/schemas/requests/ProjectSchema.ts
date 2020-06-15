@@ -9,7 +9,7 @@ export const CreateProjectSchema: RouteSchema = {
             name: { type: 'string', minLength: 1, maxLength: 30 },
             description: { type: 'string', maxLength: 100 },
         },
-        required: ['username', 'password'],
+        required: ['name', 'description'],
     },
     consumes: ['application/x-www-form-urlencoded'],
     produces: ['application/json'],
