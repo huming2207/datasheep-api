@@ -86,13 +86,32 @@ export default class ProjectController extends BaseProtectedController {
         const user = await getUserFromReq(req);
         const name = req.params['name'] as string;
         const project = await Project.findOne({ owner: user, name }).select(
-            'name description owner members -__v',
+            '_id name description owner members kanbans -__v',
         );
 
         reply.code(200).send({
             message: 'OK',
             data: {
                 project,
+            },
+        });
+    };
+
+    @GET({ url: '/:name/kanbans' })
+    listAllKanbans = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+        const user = await getUserFromReq(req);
+        const name = req.params['name'] as string;
+        const project = await Project.findOne({ owner: user, name }).populate({
+            path: 'kanbans',
+            select: '_id title description createdBy project events -__v',
+        });
+
+        if (!project) throw new NotFoundError(`Project "${name}" not found`);
+
+        reply.code(200).send({
+            message: 'OK',
+            data: {
+                kanbans: project.kanbans,
             },
         });
     };
