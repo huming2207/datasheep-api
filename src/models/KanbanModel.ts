@@ -1,7 +1,7 @@
-import { Document, Schema, model, Types } from 'mongoose';
-import { UserDoc } from './UserModel';
-import { ProjectDoc } from './ProjectModel';
-import { EventDoc } from './EventModel';
+import { Document, Schema, model, Types } from "mongoose";
+import { UserDoc } from "./UserModel";
+import { ProjectDoc } from "./ProjectModel";
+import { EventDoc } from "./EventModel";
 
 export interface KanbanDoc extends Document {
     title: string;
@@ -14,9 +14,9 @@ export interface KanbanDoc extends Document {
 export const KanbanSchema = new Schema({
     title: { type: String, unique: true },
     description: { type: String },
-    createdBy: { type: Types.ObjectId, ref: 'User' },
-    project: { type: Types.ObjectId, ref: 'Project' },
-    events: [{ type: Types.ObjectId, ref: 'Event' }],
+    createdBy: { type: Types.ObjectId, ref: "User" },
+    project: { type: Types.ObjectId, ref: "Project" },
+    events: [{ type: Types.ObjectId, ref: "Event" }],
 });
 
-export default model<KanbanDoc>('Kanban', KanbanSchema);
+export default model<KanbanDoc>("Kanban", KanbanSchema);

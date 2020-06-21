@@ -1,7 +1,7 @@
-import http from 'http';
-import fastify from 'fastify';
+import http from "http";
+import fastify from "fastify";
 
-declare module 'fastify' {
+declare module "fastify" {
     export type ServerInstance = fastify.FastifyInstance<
         http.Server,
         http.IncomingMessage,

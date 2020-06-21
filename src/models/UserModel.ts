@@ -1,4 +1,4 @@
-import { Document, Schema, model } from 'mongoose';
+import { Document, Schema, model } from "mongoose";
 
 export interface UserDoc extends Document {
     username: string;
@@ -12,4 +12,4 @@ export const UserSchema = new Schema({
     email: { type: String, unique: true },
 });
 
-export default model<UserDoc>('User', UserSchema);
+export default model<UserDoc>("User", UserSchema);

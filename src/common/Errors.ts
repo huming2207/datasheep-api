@@ -1,17 +1,17 @@
-import { FastifyError, ValidationResult } from 'fastify';
+import { FastifyError, ValidationResult } from "fastify";
 
 export abstract class BaseError implements FastifyError {
     statusCode?: number | undefined;
     validation?: ValidationResult[] | undefined;
-    name = '';
-    message = '';
+    name = "";
+    message = "";
     stack?: string | undefined;
 }
 
 export class BadRequestError extends BaseError {
     constructor(msg: string) {
         super();
-        this.name = 'Bad Request';
+        this.name = "Bad Request";
         this.message = msg;
         this.statusCode = 400;
     }
@@ -20,7 +20,7 @@ export class BadRequestError extends BaseError {
 export class UnauthorisedError extends BaseError {
     constructor(msg: string) {
         super();
-        this.name = 'Unauthorised';
+        this.name = "Unauthorised";
         this.message = msg;
         this.statusCode = 401;
     }
@@ -29,7 +29,7 @@ export class UnauthorisedError extends BaseError {
 export class ForbiddenError extends BaseError {
     constructor(msg: string) {
         super();
-        this.name = 'Forbidden';
+        this.name = "Forbidden";
         this.message = msg;
         this.statusCode = 403;
     }
@@ -38,7 +38,7 @@ export class ForbiddenError extends BaseError {
 export class NotFoundError extends BaseError {
     constructor(msg: string) {
         super();
-        this.name = 'Not Found';
+        this.name = "Not Found";
         this.message = msg;
         this.statusCode = 404;
     }
@@ -47,7 +47,7 @@ export class NotFoundError extends BaseError {
 export class InternalError extends BaseError {
     constructor(msg: string) {
         super();
-        this.name = 'Internal Server Error';
+        this.name = "Internal Server Error";
         this.message = msg;
         this.statusCode = 500;
     }

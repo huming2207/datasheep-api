@@ -1,6 +1,6 @@
-import { Document, Schema, model, Types } from 'mongoose';
-import { UserDoc } from './UserModel';
-import { ProjectDoc } from './ProjectModel';
+import { Document, Schema, model, Types } from "mongoose";
+import { UserDoc } from "./UserModel";
+import { ProjectDoc } from "./ProjectModel";
 
 export interface EventDoc extends Document {
     title: string;
@@ -15,9 +15,9 @@ export const EventSchema = new Schema({
     title: { type: String, unique: true },
     content: { type: String },
     color: { type: Number },
-    createdBy: { type: Types.ObjectId, ref: 'User' },
-    assignedTo: [{ type: Types.ObjectId, ref: 'User' }],
-    project: { type: Types.ObjectId, ref: 'Project' },
+    createdBy: { type: Types.ObjectId, ref: "User" },
+    assignedTo: [{ type: Types.ObjectId, ref: "User" }],
+    project: { type: Types.ObjectId, ref: "Project" },
 });
 
-export default model<EventDoc>('Event', EventSchema);
+export default model<EventDoc>("Event", EventSchema);
