@@ -1,41 +1,41 @@
-import { JSONSchema7 } from 'json-schema';
-import { RouteSchema } from 'fastify';
-import { SuccessResponseSchema } from '../responses/SuccessResponseSchema';
-import { ErrorSchema } from '../responses/ErrorResponseSchema';
+import { JSONSchema7 } from "json-schema";
+import { RouteSchema } from "fastify";
+import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
+import { ErrorSchema } from "../responses/ErrorResponseSchema";
 
 const LoginFormSchema: JSONSchema7 = {
-    $id: '#loginForm',
-    type: 'object',
+    $id: "#loginForm",
+    type: "object",
     properties: {
-        username: { type: 'string', minLength: 3, maxLength: 60 },
-        password: { type: 'string', minLength: 8, maxLength: 20 },
+        username: { type: "string", minLength: 3, maxLength: 60 },
+        password: { type: "string", minLength: 8, maxLength: 20 },
     },
-    required: ['username', 'password'],
+    required: ["username", "password"],
 };
 
 const RegisterFormSchema: JSONSchema7 = {
-    $id: '#regForm',
-    type: 'object',
+    $id: "#regForm",
+    type: "object",
     properties: {
-        username: { type: 'string', minLength: 3, maxLength: 60, not: { format: 'email' } },
-        password: { type: 'string', minLength: 8, maxLength: 20 },
-        email: { type: 'string', format: 'email' },
+        username: { type: "string", minLength: 3, maxLength: 60, not: { format: "email" } },
+        password: { type: "string", minLength: 8, maxLength: 20 },
+        email: { type: "string", format: "email" },
     },
-    required: ['username', 'password', 'email'],
+    required: ["username", "password", "email"],
 };
 
 export const UserLoginSchema: RouteSchema = {
     body: LoginFormSchema,
-    consumes: ['application/x-www-form-urlencoded'],
-    produces: ['application/json'],
-    description: 'Register a new user',
+    consumes: ["application/x-www-form-urlencoded"],
+    produces: ["application/json"],
+    description: "Register a new user",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
 export const UserRegisterSchema: RouteSchema = {
     body: RegisterFormSchema,
-    consumes: ['application/x-www-form-urlencoded'],
-    produces: ['application/json'],
-    description: 'User login, and get a new JWT token',
+    consumes: ["application/x-www-form-urlencoded"],
+    produces: ["application/json"],
+    description: "User login, and get a new JWT token",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
