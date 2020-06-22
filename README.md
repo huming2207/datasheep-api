@@ -2,7 +2,20 @@
 
 Embedded software developer's Kanban system
 
-More details TBD
+## Tech stack
+
+- NodeJS + TypeScript
+- Web framework
+    - Fastify
+    - Fastify-form
+    - Fastify-multipart
+    - Fastify-decorator
+- Database (MongoDB)
+    - Mongoose ODM
+- Misc
+    - JWT
+    - Argon2
+
 
 ## License
 
