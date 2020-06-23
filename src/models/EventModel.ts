@@ -6,7 +6,7 @@ export interface EventDoc extends Document {
     title: string;
     content: string;
     color: number;
-    createdBy: UserDoc;
+    owner: UserDoc;
     assignedTo: UserDoc[];
     project: ProjectDoc;
 }
@@ -15,7 +15,7 @@ export const EventSchema = new Schema({
     title: { type: String, unique: true },
     content: { type: String },
     color: { type: Number },
-    createdBy: { type: Types.ObjectId, ref: "User" },
+    owner: { type: Types.ObjectId, ref: "User" },
     assignedTo: [{ type: Types.ObjectId, ref: "User" }],
     project: { type: Types.ObjectId, ref: "Project" },
 });

@@ -6,7 +6,7 @@ import { EventDoc } from "./EventModel";
 export interface KanbanDoc extends Document {
     title: string;
     description: string;
-    createdBy: UserDoc;
+    owner: UserDoc;
     project: ProjectDoc;
     events: EventDoc[];
 }
@@ -14,7 +14,7 @@ export interface KanbanDoc extends Document {
 export const KanbanSchema = new Schema({
     title: { type: String, unique: true },
     description: { type: String },
-    createdBy: { type: Types.ObjectId, ref: "User" },
+    owner: { type: Types.ObjectId, ref: "User" },
     project: { type: Types.ObjectId, ref: "Project" },
     events: [{ type: Types.ObjectId, ref: "Event" }],
 });
