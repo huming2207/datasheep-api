@@ -1,6 +1,7 @@
 import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
 import { ProjectDoc } from "./ProjectModel";
+import { FileDoc } from "./FileModel";
 
 export interface EventDoc extends Document {
     title: string;
@@ -9,6 +10,7 @@ export interface EventDoc extends Document {
     owner: UserDoc;
     assignedTo: UserDoc[];
     project: ProjectDoc;
+    attachments: FileDoc[];
 }
 
 export const EventSchema = new Schema({
@@ -18,6 +20,7 @@ export const EventSchema = new Schema({
     owner: { type: Types.ObjectId, ref: "User" },
     assignedTo: [{ type: Types.ObjectId, ref: "User" }],
     project: { type: Types.ObjectId, ref: "Project" },
+    attachments: [{ type: Types.ObjectId, ref: "File" }],
 });
 
 export default model<EventDoc>("Event", EventSchema);
