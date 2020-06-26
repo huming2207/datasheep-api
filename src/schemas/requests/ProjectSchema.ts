@@ -31,7 +31,6 @@ export const ModifyProjectSchema: RouteSchema = {
             name: { type: "string", minLength: 1, maxLength: 30, optional: true },
             description: { type: "string", maxLength: 100, optional: true },
         },
-        required: ["username", "password"],
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
