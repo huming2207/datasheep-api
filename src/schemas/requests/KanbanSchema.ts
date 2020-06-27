@@ -38,13 +38,34 @@ export const ModifyKanbanSchema: RouteSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetAllProjectsSchema: RouteSchema = {
+export const GetAllKanbanSchema: RouteSchema = {
     produces: ["application/json"],
     description: "Get all kanbans",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetOneProjectSchema: RouteSchema = {
+export const GetOneKanbanSchema: RouteSchema = {
+    params: {
+        type: "object",
+        properties: {
+            id: { type: "string" },
+        },
+        required: ["id"],
+    },
+    body: {
+        type: "object",
+        properties: {
+            event: { type: "string" },
+        },
+        required: ["event"],
+    },
+    consumes: ["application/x-www-form-urlencoded"],
+    produces: ["application/json"],
+    description: "Get one kanban",
+    response: { 200: SuccessResponseSchema, ...ErrorSchema },
+};
+
+export const AddEventSchema: RouteSchema = {
     params: {
         type: "object",
         properties: {
@@ -54,7 +75,7 @@ export const GetOneProjectSchema: RouteSchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Get one kanban",
+    description: "Add an event to kanban",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
