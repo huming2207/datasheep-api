@@ -9,14 +9,19 @@ export interface KanbanDoc extends Document {
     owner: UserDoc;
     project: ProjectDoc;
     events: EventDoc[];
+    created: Date;
+    updated: Date;
 }
 
-export const KanbanSchema = new Schema({
-    title: { type: String, unique: true },
-    description: { type: String },
-    owner: { type: Types.ObjectId, ref: "User" },
-    project: { type: Types.ObjectId, ref: "Project" },
-    events: [{ type: Types.ObjectId, ref: "Event" }],
-});
+export const KanbanSchema = new Schema(
+    {
+        title: { type: String, unique: true },
+        description: { type: String },
+        owner: { type: Types.ObjectId, ref: "User" },
+        project: { type: Types.ObjectId, ref: "Project" },
+        events: [{ type: Types.ObjectId, ref: "Event" }],
+    },
+    { timestamps: { createdAt: "created", updatedAt: "updated" } },
+);
 
 export default model<KanbanDoc>("Kanban", KanbanSchema);
