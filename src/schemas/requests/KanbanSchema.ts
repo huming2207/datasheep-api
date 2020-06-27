@@ -21,9 +21,9 @@ export const ModifyKanbanSchema: RouteSchema = {
     params: {
         type: "object",
         properties: {
-            title: { type: "string", minLength: 1, maxLength: 30 },
+            id: { type: "string" },
         },
-        required: ["title"],
+        required: ["id"],
     },
     body: {
         type: "object",
@@ -48,9 +48,9 @@ export const GetOneProjectSchema: RouteSchema = {
     params: {
         type: "object",
         properties: {
-            title: { type: "string", minLength: 1, maxLength: 30 },
+            id: { type: "string" },
         },
-        required: ["title"],
+        required: ["id"],
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
@@ -62,9 +62,9 @@ export const DeleteOneProjectSchema: RouteSchema = {
     params: {
         type: "object",
         properties: {
-            title: { type: "string", minLength: 1, maxLength: 30 },
+            id: { type: "string" },
         },
-        required: ["title"],
+        required: ["id"],
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
