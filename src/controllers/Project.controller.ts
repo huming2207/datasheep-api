@@ -48,13 +48,10 @@ export default class ProjectController extends BaseProtectedController {
         const project = await Project.findOne({ owner: user, name });
         if (!project) throw new NotFoundError("Project not found");
 
-        await Project.updateOne(
-            { id: project._id },
-            {
-                name: req.body["name"],
-                description: req.body["description"],
-            },
-        );
+        await Project.updateOne(project, {
+            name: req.body["name"],
+            description: req.body["description"],
+        });
 
         reply.code(200).send({
             message: "Project updated",
@@ -120,6 +117,9 @@ export default class ProjectController extends BaseProtectedController {
     deleteOneProject = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
         const user = await getUserFromReq(req);
         const name = req.params["name"] as string;
+        const project = await Project.findOne({ owner: user, name });
+        if (!project) throw new NotFoundError(`Project "${name}" not found`);
+
         await Project.deleteOne({ owner: user, name });
 
         reply.code(200).send({
