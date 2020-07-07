@@ -23,7 +23,7 @@
     "fastify-jwt": "^1.4.0",
     "fastify-multipart": "^1.0.6",
     "fastify-oas": "^2.7.0",
-    "fastify-swagger": "^2.6.0",
+    "fastify-swagger": "^3.0.0",
     "fluent-schema": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
     "minio": "^7.0.16",
