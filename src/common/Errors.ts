@@ -4,6 +4,7 @@ export abstract class BaseError implements FastifyError {
     statusCode?: number | undefined;
     validation?: ValidationResult[] | undefined;
     name = "";
+    code = "";
     message = "";
     stack?: string | undefined;
 }
