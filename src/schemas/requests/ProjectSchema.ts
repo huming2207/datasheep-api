@@ -1,8 +1,8 @@
-import { RouteSchema } from "fastify";
+import { FastifyOasSchema } from "fastify";
 import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
 
-export const CreateProjectSchema: RouteSchema = {
+export const CreateProjectSchema: FastifyOasSchema = {
     body: {
         type: "object",
         properties: {
@@ -17,7 +17,7 @@ export const CreateProjectSchema: RouteSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const ModifyProjectSchema: RouteSchema = {
+export const ModifyProjectSchema: FastifyOasSchema = {
     params: {
         type: "object",
         properties: {
@@ -38,13 +38,13 @@ export const ModifyProjectSchema: RouteSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetAllProjectsSchema: RouteSchema = {
+export const GetAllProjectsSchema: FastifyOasSchema = {
     produces: ["application/json"],
     description: "Get all projects",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetOneProjectSchema: RouteSchema = {
+export const GetOneProjectSchema: FastifyOasSchema = {
     params: {
         type: "object",
         properties: {
@@ -58,7 +58,7 @@ export const GetOneProjectSchema: RouteSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const DeleteOneProjectSchema: RouteSchema = {
+export const DeleteOneProjectSchema: FastifyOasSchema = {
     params: {
         type: "object",
         properties: {
