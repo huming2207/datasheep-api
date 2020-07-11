@@ -79,7 +79,7 @@ export const AddEventSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const DeleteOneProjectSchema: FastifyOasSchema = {
+export const DeleteOneKanbanSchema: FastifyOasSchema = {
     params: {
         type: "object",
         properties: {
