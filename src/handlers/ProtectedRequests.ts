@@ -19,9 +19,9 @@ const onProtectedRequest = async (req: FastifyRequest, reply: FastifyReply): Pro
     }
 };
 
-export default function bootstrap(instance: FastifyInstance): void {
+export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.addHook("onRequest", onProtectedRequest);
-    instance.register(EventHandler);
-    instance.register(ProjectHandler);
-    instance.register(KanbanHandler);
+    await instance.register(EventHandler);
+    await instance.register(ProjectHandler);
+    await instance.register(KanbanHandler);
 }

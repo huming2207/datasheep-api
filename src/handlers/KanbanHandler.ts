@@ -18,7 +18,6 @@ import {
     ModifyKanbanSchema,
     DeleteOneKanbanSchema,
 } from "../schemas/requests/KanbanSchema";
-import fp from "fastify-plugin";
 
 const getAllKanbans = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const user = await getUserFromReq(req);

@@ -1,7 +1,13 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import User, { UserDoc } from "../models/UserModel";
-import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
+import {
+    FastifyRequest,
+    FastifyReply,
+    FastifyInstance,
+    FastifyPluginOptions,
+    FastifyError,
+} from "fastify";
 import { BadRequestError, UnauthorisedError } from "../common/Errors";
 import { InternalError } from "../common/Errors";
 import { UserLoginSchema, UserRegisterSchema } from "../schemas/requests/UserAuthSchema";
@@ -81,7 +87,11 @@ const userLogin = async (
     }
 };
 
-export default function bootstrap(server: FastifyInstance): void {
+export default function bootstrap(
+    server: FastifyInstance,
+    opts: FastifyPluginOptions,
+    next: (err?: FastifyError) => void,
+): void {
     server.post(
         "/auth/register",
         {
@@ -96,4 +106,6 @@ export default function bootstrap(server: FastifyInstance): void {
         },
         userLogin,
     );
+
+    next();
 }

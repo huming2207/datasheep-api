@@ -4,8 +4,8 @@ import FastifyOas from "fastify-oas";
 import FastifyFormBody from "fastify-formbody";
 import FastifyJwt from "fastify-jwt";
 import Middie from "middie";
-import { bootstrap } from "fastify-decorators";
-import { resolve } from "path";
+import AuthHandler from "../handlers/AuthHandler";
+import ProtectedRequests from "../handlers/ProtectedRequests";
 
 export const buildServer = async (): Promise<FastifyInstance> => {
     const logger = pino({
@@ -56,10 +56,8 @@ export const buildServer = async (): Promise<FastifyInstance> => {
         },
     });
 
-    await server.register(bootstrap, {
-        directory: resolve(__dirname, `../controllers`),
-        mask: /\.controller\./,
-    });
+    await server.register(AuthHandler);
+    await server.register(ProtectedRequests);
 
     return server;
 };

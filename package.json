@@ -18,7 +18,6 @@
     "argon2": "^0.26.2",
     "dotenv": "^8.2.0",
     "fastify": "^3.0.2",
-    "fastify-decorators": "^3.0.0",
     "fastify-formbody": "^4.0.3",
     "fastify-jwt": "^2.1.2",
     "fastify-multipart": "^2.0.3",
