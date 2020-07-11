@@ -1,26 +1,13 @@
-import http from "http";
-import fastify from "fastify";
+import { FastifySchema } from "fastify";
 
 declare module "fastify" {
-    export type ServerInstance = fastify.FastifyInstance<
-        http.Server,
-        http.IncomingMessage,
-        http.ServerResponse
-    >;
-
-    export type ServerRequest = fastify.FastifyRequest;
-    export type MiddlewareOptions = RegisterOptions<
-        http.Server,
-        http.IncomingMessage,
-        http.ServerResponse
-    >;
-
-    export type ServerReply = fastify.FastifyReply<http.ServerResponse>;
-    export type ServerPlugin = Plugin<
-        http.Server,
-        http.IncomingMessage,
-        http.ServerResponse,
-        MiddlewareOptions,
-        () => void
-    >;
+    export interface FastifyOasSchema extends FastifySchema {
+        hide?: boolean;
+        tags?: string[];
+        description?: string;
+        summary?: string;
+        consumes?: string[];
+        produces?: string[];
+        security?: Array<{ [securityLabel: string]: string[] }>;
+    }
 }
