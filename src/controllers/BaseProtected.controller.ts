@@ -1,10 +1,10 @@
 import { Hook, Controller } from "fastify-decorators";
-import { ServerRequest, ServerReply } from "fastify";
+import { FastifyRequest, FastifyReply } from "fastify";
 
 @Controller()
 export default class BaseProtectedController {
     @Hook("onRequest")
-    protected async onProtectedRequest(req: ServerRequest, reply: ServerReply): Promise<void> {
+    protected async onProtectedRequest(req: FastifyRequest, reply: FastifyReply): Promise<void> {
         try {
             await req.jwtVerify();
             const userId = (req.user as any)["id"];

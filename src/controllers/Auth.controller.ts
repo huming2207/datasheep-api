@@ -2,7 +2,7 @@ import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import User, { UserDoc } from "../models/UserModel";
 import { Controller, POST } from "fastify-decorators";
-import { ServerRequest, ServerReply } from "fastify";
+import { FastifyRequest, FastifyReply } from "fastify";
 import { BadRequestError, UnauthorisedError } from "../common/Errors";
 import { InternalError } from "../common/Errors";
 import { UserLoginSchema, UserRegisterSchema } from "../schemas/requests/UserAuthSchema";
@@ -10,7 +10,10 @@ import { UserLoginSchema, UserRegisterSchema } from "../schemas/requests/UserAut
 @Controller({ route: "/api/auth" })
 export default class AuthController {
     @POST({ url: "/register", options: { schema: UserRegisterSchema } })
-    userRegister = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+    userRegister = async (
+        req: FastifyRequest<{ Body: { username: string; password: string; email: string } }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
         const username = req.body["username"] as string;
         const password = req.body["password"] as string;
         const email = req.body["email"] as string;
@@ -47,9 +50,12 @@ export default class AuthController {
     };
 
     @POST({ url: "/login", options: { schema: UserLoginSchema } })
-    userLogin = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
-        const username = req.body["username"] as string;
-        const password = req.body["password"] as string;
+    userLogin = async (
+        req: FastifyRequest<{ Body: { username: string; password: string } }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
+        const username = req.body.username;
+        const password = req.body.password;
 
         let user: UserDoc | null;
         try {

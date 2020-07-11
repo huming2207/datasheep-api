@@ -1,5 +1,5 @@
 import { Controller, GET, POST, PUT, DELETE } from "fastify-decorators";
-import { ServerRequest, ServerReply } from "fastify";
+import { FastifyRequest, FastifyReply } from "fastify";
 import BaseProtectedController from "./BaseProtected.controller";
 import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
@@ -9,9 +9,12 @@ import { NotFoundError } from "../common/Errors";
 @Controller({ route: "/api/event" })
 export default class EventController extends BaseProtectedController {
     @GET({ url: "/:id" })
-    getOneEvent = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+    getOneEvent = async (
+        req: FastifyRequest<{ Params: { id: string } }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
         const user = await getUserFromReq(req);
-        const id = req.params["id"] as string;
+        const id = req.params.id;
         const event = await Event.findOne({ owner: user, id });
 
         if (!event) throw new NotFoundError("Event not found");
@@ -25,11 +28,14 @@ export default class EventController extends BaseProtectedController {
     };
 
     @POST({ url: "/" })
-    createEvent = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+    createEvent = async (
+        req: FastifyRequest<{ Body: { color?: number; content: string; title: string } }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
         const user = await getUserFromReq(req);
-        const color = req.body["color"] ? parseInt(req.body["color"]) : 0;
-        const content = req.body["content"] as string;
-        const title = req.body["title"] as string;
+        const color = req.body.color || 0;
+        const content = req.body.content;
+        const title = req.body.title;
         const event = await Event.create<{
             owner: UserDoc;
             color: number;
@@ -51,16 +57,22 @@ export default class EventController extends BaseProtectedController {
     };
 
     @PUT({ url: "/:id" })
-    modifyEvent = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+    modifyEvent = async (
+        req: FastifyRequest<{
+            Params: { id: string };
+            Body: { title?: string; content?: string; color?: number };
+        }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
         const user = await getUserFromReq(req);
         const id = req.params["id"] as string;
         const event = await Event.findOne({ owner: user, id });
         if (!event) throw new NotFoundError("Event not found");
 
         await Event.updateOne(event, {
-            title: req.body["title"] || event.title,
-            content: req.body["content"] || event.content,
-            color: req.body["color"] ? parseInt(req.body["color"]) : event.color,
+            title: req.body.title || event.title,
+            content: req.body.content || event.content,
+            color: req.body.color || event.color,
         });
 
         reply.code(200).send({
@@ -72,7 +84,10 @@ export default class EventController extends BaseProtectedController {
     };
 
     @DELETE({ url: "/:id" })
-    deleteEvent = async (req: ServerRequest, reply: ServerReply): Promise<void> => {
+    deleteEvent = async (
+        req: FastifyRequest<{ Params: { id: string } }>,
+        reply: FastifyReply,
+    ): Promise<void> => {
         const user = await getUserFromReq(req);
         const id = req.params["id"] as string;
 
