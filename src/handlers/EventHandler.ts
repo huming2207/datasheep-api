@@ -1,12 +1,10 @@
-import { Controller, GET, POST, PUT, DELETE } from "fastify-decorators";
 import {
     FastifyRequest,
     FastifyReply,
-    FastifyInstance,
     FastifyPluginOptions,
     FastifyError,
+    FastifyInstance,
 } from "fastify";
-import BaseProtectedController from "./ProtectedRequests";
 import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
 import { UserDoc } from "../models/UserModel";

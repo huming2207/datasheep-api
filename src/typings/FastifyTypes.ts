@@ -3,7 +3,11 @@ import {
     RawServerBase,
     RawRequestDefaultExpression,
     RawReplyDefaultExpression,
+    FastifyLoggerInstance,
+    RawServerDefault,
 } from "fastify";
+
+import http from "http";
 
 declare module "fastify" {
     export interface FastifyOasSchema extends FastifySchema {
@@ -15,10 +19,4 @@ declare module "fastify" {
         produces?: string[];
         security?: Array<{ [securityLabel: string]: string[] }>;
     }
-
-    export type HandlerInstance = FastifyInstance<
-        RawServerBase,
-        RawRequestDefaultExpression<RawServerBase>,
-        RawReplyDefaultExpression<RawServerBase>
-    >;
 }

@@ -1,9 +1,9 @@
 import {
     FastifyRequest,
     FastifyReply,
-    FastifyInstance,
     FastifyPluginOptions,
     FastifyError,
+    FastifyInstance,
 } from "fastify";
 import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
@@ -20,11 +20,7 @@ import {
 } from "../schemas/requests/KanbanSchema";
 import fp from "fastify-plugin";
 
-const getAllKanbans = async (
-    instance: FastifyInstance,
-    req: FastifyRequest,
-    reply: FastifyReply,
-): Promise<void> => {
+const getAllKanbans = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
     const user = await getUserFromReq(req);
     const kanbans = await Kanban.find({ owner: user }).select(
         "_id title description owner project -__v -events", // Filter out events (or it will be a super long response...)
@@ -39,7 +35,6 @@ const getAllKanbans = async (
 };
 
 const getOneKanban = async (
-    instance: FastifyInstance,
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -58,7 +53,6 @@ const getOneKanban = async (
 };
 
 const createKanban = async (
-    instance: FastifyInstance,
     req: FastifyRequest<{ Body: { color?: number; title: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -80,7 +74,6 @@ const createKanban = async (
 };
 
 const addEvent = async (
-    instance: FastifyInstance,
     req: FastifyRequest<{ Params: { id: string }; Body: { event: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -107,7 +100,6 @@ const addEvent = async (
 };
 
 const modifyKanban = async (
-    instance: FastifyInstance,
     req: FastifyRequest<{
         Params: { id: string };
         Body: { title?: string; description?: string; color?: number };
@@ -134,7 +126,6 @@ const modifyKanban = async (
 };
 
 const deleteKanban = async (
-    instance: FastifyInstance,
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -151,15 +142,16 @@ const deleteKanban = async (
     });
 };
 
-export default fp(
-    (instance, opts, next) => {
-        instance.get("/kanban", { schema: GetAllKanbanSchema }, getAllKanbans);
-        instance.get("/kanban/:id", { schema: GetOneKanbanSchema }, getOneKanban);
-        instance.post("/kanban", { schema: CreateKanbanSchema }, createKanban);
-        instance.post("/kanban/:id/event", { schema: AddEventSchema }, addEvent);
-        instance.put("/kanban/:id", { schema: ModifyKanbanSchema }, modifyKanban);
-        instance.delete("/kanban/:id", { schema: DeleteOneKanbanSchema }, deleteKanban);
-        next();
-    },
-    { fastify: "3.x" },
-);
+export default function bootstrap(
+    instance: FastifyInstance,
+    option: FastifyPluginOptions,
+    next: (err?: FastifyError) => void,
+): void {
+    instance.get("/kanban", { schema: GetAllKanbanSchema }, getAllKanbans);
+    instance.get("/kanban/:id", { schema: GetOneKanbanSchema }, getOneKanban);
+    instance.post("/kanban", { schema: CreateKanbanSchema }, createKanban);
+    instance.post("/kanban/:id/event", { schema: AddEventSchema }, addEvent);
+    instance.put("/kanban/:id", { schema: ModifyKanbanSchema }, modifyKanban);
+    instance.delete("/kanban/:id", { schema: DeleteOneKanbanSchema }, deleteKanban);
+    next();
+}

@@ -1,7 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
 import User, { UserDoc } from "../models/UserModel";
-import { Controller, POST } from "fastify-decorators";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { BadRequestError, UnauthorisedError } from "../common/Errors";
 import { InternalError } from "../common/Errors";
