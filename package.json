@@ -23,6 +23,7 @@
     "fastify-jwt": "^2.1.2",
     "fastify-multipart": "^2.0.3",
     "fastify-oas": "3.0.0-rc.3",
+    "fastify-plugin": "^2.0.0",
     "fastify-swagger": "^3.1.1",
     "fluent-schema": "^1.0.4",
     "jsonwebtoken": "^8.5.1",
