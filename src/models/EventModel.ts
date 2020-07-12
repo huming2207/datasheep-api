@@ -1,7 +1,7 @@
 import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
-import { ProjectDoc } from "./ProjectModel";
 import { FileDoc } from "./FileModel";
+import { KanbanDoc } from "./KanbanModel";
 
 export interface EventDoc extends Document {
     title: string;
@@ -9,7 +9,7 @@ export interface EventDoc extends Document {
     color: number;
     owner: UserDoc;
     assignedTo: UserDoc[];
-    project: ProjectDoc;
+    kanban: KanbanDoc;
     attachments: FileDoc[];
     created: Date;
     updated: Date;
@@ -22,7 +22,7 @@ export const EventSchema = new Schema(
         color: { type: Number },
         owner: { type: Types.ObjectId, ref: "User" },
         assignedTo: [{ type: Types.ObjectId, ref: "User" }],
-        project: { type: Types.ObjectId, ref: "Project" },
+        kanban: { type: Types.ObjectId, ref: "Kanban" },
         attachments: [{ type: Types.ObjectId, ref: "File" }],
     },
     { timestamps: { createdAt: "created", updatedAt: "updated" } },
