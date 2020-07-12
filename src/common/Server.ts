@@ -56,8 +56,8 @@ export const buildServer = async (): Promise<FastifyInstance> => {
         },
     });
 
-    await server.register(AuthHandler);
-    await server.register(ProtectedRequests);
+    await server.register(AuthHandler, { prefix: "/api" });
+    await server.register(ProtectedRequests, { prefix: "/api" });
 
     return server;
 };

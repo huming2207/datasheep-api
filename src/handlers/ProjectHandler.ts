@@ -146,9 +146,9 @@ export default function bootstrap(
     next: (err?: FastifyError) => void,
 ): void {
     instance.post("/project", { schema: CreateProjectSchema }, createNewProject);
-    instance.put("/:name", { schema: ModifyProjectSchema }, modifyProject);
-    instance.get("/", { schema: GetAllProjectsSchema }, getAllProjects);
-    instance.get("/:name", { schema: GetOneProjectSchema }, getOneProject);
-    instance.delete("/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
+    instance.put("/project/:name", { schema: ModifyProjectSchema }, modifyProject);
+    instance.get("/project", { schema: GetAllProjectsSchema }, getAllProjects);
+    instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
+    instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
     next();
 }
