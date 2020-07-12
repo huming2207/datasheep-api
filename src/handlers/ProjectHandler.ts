@@ -1,12 +1,6 @@
 import { UserDoc } from "../models/UserModel";
 import Project from "../models/ProjectModel";
-import {
-    FastifyRequest,
-    FastifyReply,
-    FastifyInstance,
-    FastifyError,
-    FastifyPluginOptions,
-} from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import {
     CreateProjectSchema,
     ModifyProjectSchema,
@@ -150,15 +144,10 @@ const deleteOneProject = async (
     });
 };
 
-export default function bootstrap(
-    instance: FastifyInstance,
-    option: FastifyPluginOptions,
-    next: (err?: FastifyError) => void,
-): void {
+export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.post("/project", { schema: CreateProjectSchema }, createNewProject);
     instance.put("/project/:name", { schema: ModifyProjectSchema }, modifyProject);
     instance.get("/project", { schema: GetAllProjectsSchema }, getAllProjects);
     instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
     instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
-    next();
 }

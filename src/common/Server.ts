@@ -7,7 +7,7 @@ import Middie from "middie";
 import AuthHandler from "../handlers/AuthHandler";
 import ProtectedRequests from "../handlers/ProtectedRequests";
 
-export const buildServer = (): FastifyInstance => {
+export const buildServer = async (): Promise<FastifyInstance> => {
     const logger = pino({
         level: process.env.DS_LOG_LEVEL || "warn",
         prettyPrint: process.env.DS_LOG_PRETTY === "true" ? { colorize: true, crlf: false } : false,
@@ -46,9 +46,9 @@ export const buildServer = (): FastifyInstance => {
         });
     }
 
-    server.register(Middie);
-    server.register(FastifyFormBody);
-    server.register(FastifyJwt, {
+    await server.register(Middie);
+    await server.register(FastifyFormBody);
+    await server.register(FastifyJwt, {
         secret: process.env.PP_JWT_SECRET ? process.env.PP_JWT_SECRET : "jwtTestToken",
         sign: {
             algorithm: "HS512",
@@ -56,8 +56,8 @@ export const buildServer = (): FastifyInstance => {
         },
     });
 
-    server.register(AuthHandler, { prefix: "/api" });
-    server.register(ProtectedRequests, { prefix: "/api" });
+    await server.register(AuthHandler, { prefix: "/api" });
+    await server.register(ProtectedRequests, { prefix: "/api" });
 
     return server;
 };

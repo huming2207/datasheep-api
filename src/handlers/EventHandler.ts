@@ -1,10 +1,4 @@
-import {
-    FastifyRequest,
-    FastifyReply,
-    FastifyPluginOptions,
-    FastifyError,
-    FastifyInstance,
-} from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
 import { UserDoc } from "../models/UserModel";
@@ -101,11 +95,7 @@ const deleteEvent = async (
     });
 };
 
-export default function bootstrap(
-    instance: FastifyInstance,
-    option: FastifyPluginOptions,
-    next: (err?: FastifyError) => void,
-): void {
+export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.post(
         "/event/:id",
         {
@@ -137,6 +127,4 @@ export default function bootstrap(
         },
         deleteEvent,
     );
-
-    next();
 }

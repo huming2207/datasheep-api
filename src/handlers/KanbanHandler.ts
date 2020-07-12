@@ -1,10 +1,4 @@
-import {
-    FastifyRequest,
-    FastifyReply,
-    FastifyPluginOptions,
-    FastifyError,
-    FastifyInstance,
-} from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
 import Kanban from "../models/KanbanModel";
@@ -81,7 +75,7 @@ const addEvent = async (
     const eventId = req.body.event;
 
     // Check if this event exists...
-    const event = await Event.findOne({ id: eventId, owner: user });
+    const event = await Event.findOne({ id: eventId, owner: user }).populate("project");
     if (!event) throw new NotFoundError("Event not found");
 
     // If event is valid (exist), continue to add
@@ -141,16 +135,11 @@ const deleteKanban = async (
     });
 };
 
-export default function bootstrap(
-    instance: FastifyInstance,
-    option: FastifyPluginOptions,
-    next: (err?: FastifyError) => void,
-): void {
+export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.get("/kanban", { schema: GetAllKanbanSchema }, getAllKanbans);
     instance.get("/kanban/:id", { schema: GetOneKanbanSchema }, getOneKanban);
     instance.post("/kanban", { schema: CreateKanbanSchema }, createKanban);
-    instance.post("/kanban/:id/event", { schema: AddEventSchema }, addEvent);
+    instance.post("/kanban/:id/add", { schema: AddEventSchema }, addEvent);
     instance.put("/kanban/:id", { schema: ModifyKanbanSchema }, modifyKanban);
     instance.delete("/kanban/:id", { schema: DeleteOneKanbanSchema }, deleteKanban);
-    next();
 }

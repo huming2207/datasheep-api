@@ -1,10 +1,4 @@
-import {
-    FastifyRequest,
-    FastifyReply,
-    FastifyInstance,
-    FastifyPluginOptions,
-    FastifyError,
-} from "fastify";
+import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import EventHandler from "./EventHandler";
 import KanbanHandler from "./KanbanHandler";
 import ProjectHandler from "./ProjectHandler";
@@ -25,14 +19,9 @@ const onProtectedRequest = async (req: FastifyRequest, reply: FastifyReply): Pro
     }
 };
 
-export default function bootstrap(
-    instance: FastifyInstance,
-    option: FastifyPluginOptions,
-    next: (err?: FastifyError) => void,
-): void {
+export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.addHook("onRequest", onProtectedRequest);
-    instance.register(EventHandler);
-    instance.register(ProjectHandler);
-    instance.register(KanbanHandler);
-    next();
+    await instance.register(EventHandler);
+    await instance.register(ProjectHandler);
+    await instance.register(KanbanHandler);
 }
