@@ -44,15 +44,18 @@ const createNewProject = async (
 
 const modifyProject = async (
     req: FastifyRequest<{
-        Params: { name: string };
+        Params: { nameOrId: string };
         Body: { name?: string; description?: string };
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await getUserFromReq(req);
-    const name = req.params.name;
+    const nameOrId = req.params.nameOrId;
+    const project = await Project.findOne({
+        owner: user,
+        $or: [{ id: nameOrId }, { name: nameOrId }],
+    });
 
-    const project = await Project.findOne({ owner: user, name });
     if (!project) throw new NotFoundError("Project not found");
 
     await Project.updateOne(project, {
@@ -76,6 +79,8 @@ const getAllProjects = async (req: FastifyRequest, reply: FastifyReply): Promise
         "name description owner members -__v",
     );
 
+    if (!projects) throw new NotFoundError("No project was created");
+
     reply.code(200).send({
         message: "OK",
         data: {
@@ -85,14 +90,15 @@ const getAllProjects = async (req: FastifyRequest, reply: FastifyReply): Promise
 };
 
 const getOneProject = async (
-    req: FastifyRequest<{ Params: { name: string } }>,
+    req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await getUserFromReq(req);
-    const name = req.params.name;
-    const project = await Project.findOne({ owner: user, name }).select(
-        "_id name description owner members kanbans -__v",
-    );
+    const nameOrId = req.params.nameOrId;
+    const project = await Project.findOne({
+        owner: user,
+        $or: [{ id: nameOrId }, { name: nameOrId }],
+    }).select("_id name description owner members kanbans -__v");
 
     reply.code(200).send({
         message: "OK",
@@ -124,15 +130,19 @@ const getAllKanbanInProject = async (
 };
 
 const deleteOneProject = async (
-    req: FastifyRequest<{ Params: { name: string } }>,
+    req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await getUserFromReq(req);
-    const name = req.params.name;
-    const project = await Project.findOne({ owner: user, name });
-    if (!project) throw new NotFoundError(`Project "${name}" not found`);
+    const nameOrId = req.params.nameOrId;
+    const project = await Project.findOne({
+        owner: user,
+        $or: [{ id: nameOrId }, { name: nameOrId }],
+    });
 
-    await Project.deleteOne({ owner: user, name });
+    if (!project) throw new NotFoundError(`Project "${nameOrId}" not found`);
+
+    await Project.deleteOne(project);
 
     reply.code(200).send({
         message: "Project deleted",
