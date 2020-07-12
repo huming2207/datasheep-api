@@ -73,6 +73,13 @@ export const AddEventSchema: FastifyOasSchema = {
         },
         required: ["id"],
     },
+    body: {
+        type: "object",
+        properties: {
+            event: { type: "string" },
+        },
+        required: ["event"],
+    },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
     description: "Add an event to kanban",
