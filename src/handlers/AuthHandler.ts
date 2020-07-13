@@ -82,18 +82,6 @@ const userLogin = async (
 };
 
 export default async function bootstrap(server: FastifyInstance): Promise<void> {
-    server.post(
-        "/auth/register",
-        {
-            schema: UserRegisterSchema,
-        },
-        userRegister,
-    );
-    server.get(
-        "/auth/login",
-        {
-            schema: UserLoginSchema,
-        },
-        userLogin,
-    );
+    server.post("/auth/register", { schema: UserRegisterSchema }, userRegister);
+    server.get("/auth/login", { schema: UserLoginSchema }, userLogin);
 }
