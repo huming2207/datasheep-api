@@ -7,6 +7,7 @@ export interface EventDoc extends Document {
     title: string;
     content: string;
     color: number;
+    due: Date;
     owner: UserDoc;
     assignedTo: UserDoc[];
     kanban: KanbanDoc;
@@ -20,6 +21,7 @@ export const EventSchema = new Schema(
         title: { type: String, unique: true },
         content: { type: String },
         color: { type: Number },
+        due: { type: Date },
         owner: { type: Types.ObjectId, ref: "User" },
         assignedTo: [{ type: Types.ObjectId, ref: "User" }],
         kanban: { type: Types.ObjectId, ref: "Kanban" },

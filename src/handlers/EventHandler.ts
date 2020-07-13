@@ -3,6 +3,12 @@ import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
 import { UserDoc } from "../models/UserModel";
 import { NotFoundError } from "../common/Errors";
+import {
+    GetOneEventSchema,
+    CreateEventSchema,
+    ModifyEventSchema,
+    DeleteEventSchema,
+} from "../schemas/requests/EventSchema";
 
 const getOneEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,
@@ -23,12 +29,12 @@ const getOneEvent = async (
 };
 
 const createEvent = async (
-    req: FastifyRequest<{ Body: { color?: number; content: string; title: string } }>,
+    req: FastifyRequest<{ Body: { color?: number; content?: string; title: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await getUserFromReq(req);
     const color = req.body.color || 0;
-    const content = req.body.content;
+    const content = req.body.content || "";
     const title = req.body.title;
     const event = await Event.create<{
         owner: UserDoc;
@@ -96,35 +102,8 @@ const deleteEvent = async (
 };
 
 export default async function bootstrap(instance: FastifyInstance): Promise<void> {
-    instance.post(
-        "/event/:id",
-        {
-            // TODO: Schema here
-        },
-        getOneEvent,
-    );
-
-    instance.post(
-        "/event",
-        {
-            // TODO: Schema here
-        },
-        createEvent,
-    );
-
-    instance.put(
-        "/event/:id",
-        {
-            // TODO: Schema here
-        },
-        modifyEvent,
-    );
-
-    instance.delete(
-        "/event/:id",
-        {
-            // TODO: Schema here
-        },
-        deleteEvent,
-    );
+    instance.post("/event/:id", { schema: GetOneEventSchema }, getOneEvent);
+    instance.post("/event", { schema: CreateEventSchema }, createEvent);
+    instance.put("/event/:id", { schema: ModifyEventSchema }, modifyEvent);
+    instance.delete("/event/:id", { schema: DeleteEventSchema }, deleteEvent);
 }
