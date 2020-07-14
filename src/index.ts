@@ -12,7 +12,7 @@ buildServer()
             .then(() => {
                 console.log("Database connected, starting Fastify...");
                 server.listen(
-                    parseInt(process.env.DS_PORT || "3000"),
+                    parseInt(process.env.DS_PORT || "6000"),
                     process.env.DS_ADDR || "localhost",
                     (err, address) => {
                         if (err) {
