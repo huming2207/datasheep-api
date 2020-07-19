@@ -6,8 +6,9 @@ import FastifyJwt from "fastify-jwt";
 import Middie from "middie";
 import AuthHandler from "../handlers/AuthHandler";
 import ProtectedRequests from "../handlers/ProtectedRequests";
+import { connectToDb } from "./Database";
 
-export const buildServer = async (): Promise<FastifyInstance> => {
+export const buildFastify = async (): Promise<FastifyInstance> => {
     const logger = pino({
         level: process.env.DS_LOG_LEVEL || "warn",
         prettyPrint: process.env.DS_LOG_PRETTY === "true" ? { colorize: true, crlf: false } : false,
@@ -60,4 +61,35 @@ export const buildServer = async (): Promise<FastifyInstance> => {
     await server.register(ProtectedRequests, { prefix: "/api" });
 
     return server;
+};
+
+export const buildServer = async (): Promise<void> => {
+    try {
+        const fastify = await buildFastify();
+        await connectToDb();
+
+        console.log("Database connected, starting Fastify...");
+        fastify.listen(
+            parseInt(process.env.DS_PORT || "6000"),
+            process.env.DS_ADDR || "localhost",
+            (err, address) => {
+                if (err) {
+                    console.error(err);
+                    process.exit(1);
+                }
+
+                fastify.ready((err) => {
+                    if (err) {
+                        console.error(err);
+                        process.exit(1);
+                    }
+                    if (process.env.DS_DISABLE_SWAGGER !== "true") fastify.oas();
+                });
+                console.log(`Fastify is listening at ${address}`);
+            },
+        );
+    } catch (err) {
+        console.error(`Failed when starting API server: ${err}`);
+        process.exit(1);
+    }
 };
