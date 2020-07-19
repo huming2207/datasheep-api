@@ -67,22 +67,33 @@ const createKanban = async (
 };
 
 const addEvent = async (
-    req: FastifyRequest<{ Params: { id: string }; Body: { event: string } }>,
+    req: FastifyRequest<{ Params: { id: string }; Body: { event: string; idx: number } }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await getUserFromReq(req);
-    const id = req.params.id;
+    const kanbanId = req.params.id;
     const eventId = req.body.event;
 
     // Check if this event exists...
-    const event = await Event.findOne({ id: eventId, owner: user }).populate("project");
+    const event = await Event.findOne({ id: eventId, owner: user }).populate("kanban");
     if (!event) throw new NotFoundError("Event not found");
 
     // If event is valid (exist), continue to add
-    const kanban = await Kanban.findOne({ id, owner: user });
+    const kanban = await Kanban.findOne({ id: kanbanId, owner: user });
     if (!kanban) throw new NotFoundError("Kanban not found");
 
-    await Kanban.updateOne(kanban, { $push: { events: event } });
+    // Remove from original kanban (if exist)
+    const origKanban = event.kanban;
+
+    // If it's a new event (original kanban does not exist), just add it
+    // Otherwise, perform a splice, remove from the old one and insert to the new one
+    if (origKanban) {
+        await Kanban.updateOne(origKanban, { $pull: { events: event } });
+    }
+
+    kanban.events.splice(req.body.idx, 0, event);
+    await kanban.save();
+
     reply.code(200).send({
         message: "Event added",
         data: {

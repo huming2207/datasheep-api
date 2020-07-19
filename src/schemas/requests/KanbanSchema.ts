@@ -77,6 +77,7 @@ export const AddEventSchema: FastifyOasSchema = {
         type: "object",
         properties: {
             event: { type: "string" },
+            idx: { type: "integer", minimum: 0 },
         },
         required: ["event"],
     },
