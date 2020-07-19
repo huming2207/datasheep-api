@@ -69,25 +69,19 @@ export const buildServer = async (): Promise<void> => {
         await connectToDb();
 
         console.log("Database connected, starting Fastify...");
-        fastify.listen(
+        await fastify.listen(
             parseInt(process.env.DS_PORT || "6000"),
             process.env.DS_ADDR || "localhost",
-            (err, address) => {
-                if (err) {
-                    console.error(err);
-                    process.exit(1);
-                }
-
-                fastify.ready((err) => {
-                    if (err) {
-                        console.error(err);
-                        process.exit(1);
-                    }
-                    if (process.env.DS_DISABLE_SWAGGER !== "true") fastify.oas();
-                });
-                console.log(`Fastify is listening at ${address}`);
-            },
         );
+
+        fastify.log.info("Fastify is started.");
+        fastify.ready((err) => {
+            if (err) {
+                console.error(err);
+                process.exit(1);
+            }
+            if (process.env.DS_DISABLE_SWAGGER !== "true") fastify.oas();
+        });
     } catch (err) {
         console.error(`Failed when starting API server: ${err}`);
         process.exit(1);
