@@ -65,10 +65,11 @@ export const buildFastify = async (): Promise<FastifyInstance> => {
 
 export const buildServer = async (): Promise<void> => {
     try {
-        const fastify = await buildFastify();
         await connectToDb();
-
         console.log("Database connected, starting Fastify...");
+
+        const fastify = await buildFastify();
+
         await fastify.listen(
             parseInt(process.env.DS_PORT || "6000"),
             process.env.DS_ADDR || "localhost",
