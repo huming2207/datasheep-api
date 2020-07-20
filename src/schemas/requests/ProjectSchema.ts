@@ -58,6 +58,20 @@ export const GetOneProjectSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
+export const GetRelatedKanbansSchema: FastifyOasSchema = {
+    params: {
+        type: "object",
+        properties: {
+            name: { type: "string", minLength: 1, maxLength: 30 },
+        },
+        required: ["name"],
+    },
+    consumes: ["application/x-www-form-urlencoded"],
+    produces: ["application/json"],
+    description: "Get all related kanbans in one project",
+    response: { 200: SuccessResponseSchema, ...ErrorSchema },
+};
+
 export const DeleteOneProjectSchema: FastifyOasSchema = {
     params: {
         type: "object",

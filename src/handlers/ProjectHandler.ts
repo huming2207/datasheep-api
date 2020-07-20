@@ -7,6 +7,7 @@ import {
     GetOneProjectSchema,
     GetAllProjectsSchema,
     DeleteOneProjectSchema,
+    GetRelatedKanbansSchema,
 } from "../schemas/requests/ProjectSchema";
 import { getUserFromReq } from "../common/UserFetcher";
 import { NotFoundError } from "../common/Errors";
@@ -102,7 +103,7 @@ const getOneProject = async (
     });
 };
 
-const getAllKanbanInProject = async (
+const getRelatedKanbans = async (
     req: FastifyRequest<{ Params: { name: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -150,4 +151,5 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/project", { schema: GetAllProjectsSchema }, getAllProjects);
     instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
     instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
+    instance.get("/project/:name/kanban", { schema: GetRelatedKanbansSchema }, getRelatedKanbans);
 }
