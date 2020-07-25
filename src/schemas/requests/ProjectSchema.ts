@@ -85,3 +85,24 @@ export const DeleteOneProjectSchema: FastifyOasSchema = {
     description: "Delete one project",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
+
+export const AddKanbanSchema: FastifyOasSchema = {
+    params: {
+        type: "object",
+        properties: {
+            name: { type: "string" },
+        },
+        required: ["name"],
+    },
+    body: {
+        type: "object",
+        properties: {
+            id: { type: "string" },
+        },
+        required: ["id"],
+    },
+    consumes: ["application/x-www-form-urlencoded"],
+    produces: ["application/json"],
+    description: "Add a kanban to a project",
+    response: { 200: SuccessResponseSchema, ...ErrorSchema },
+};
