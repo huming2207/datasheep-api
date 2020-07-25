@@ -94,6 +94,9 @@ const addEvent = async (
     kanban.events.splice(req.body.idx, 0, event);
     await kanban.save();
 
+    event.kanban = kanban;
+    await event.save();
+
     reply.code(200).send({
         message: "Event added",
         data: {
