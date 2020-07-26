@@ -29,8 +29,8 @@
     "middie": "^5.1.0",
     "minio": "^7.0.16",
     "mongoose": "^5.9.25",
-    "pino": "^6.4.0",
-    "pino-pretty": "^4.0.3",
+    "pino": "^6.4.1",
+    "pino-pretty": "^4.1.0",
     "stream-meter": "^1.0.4",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.7"
