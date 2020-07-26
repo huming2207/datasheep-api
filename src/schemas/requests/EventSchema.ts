@@ -1,8 +1,8 @@
-import { FastifyOasSchema } from "fastify";
+import { FastifySchema } from "fastify";
 import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
 
-export const CreateEventSchema: FastifyOasSchema = {
+export const CreateEventSchema: FastifySchema = {
     body: {
         type: "object",
         properties: {
@@ -19,7 +19,7 @@ export const CreateEventSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetOneEventSchema: FastifyOasSchema = {
+export const GetOneEventSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -33,7 +33,7 @@ export const GetOneEventSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const ModifyEventSchema: FastifyOasSchema = {
+export const ModifyEventSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -56,7 +56,7 @@ export const ModifyEventSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const DeleteEventSchema: FastifyOasSchema = {
+export const DeleteEventSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {

@@ -1,4 +1,3 @@
-import "./typings/FastifyTypes";
 import dotenv from "dotenv";
 import { buildServer } from "./common/Server";
 

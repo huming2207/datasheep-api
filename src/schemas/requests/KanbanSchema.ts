@@ -1,8 +1,8 @@
 import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
-import { FastifyOasSchema } from "fastify";
+import { FastifySchema } from "fastify";
 
-export const CreateKanbanSchema: FastifyOasSchema = {
+export const CreateKanbanSchema: FastifySchema = {
     body: {
         type: "object",
         properties: {
@@ -17,7 +17,7 @@ export const CreateKanbanSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const ModifyKanbanSchema: FastifyOasSchema = {
+export const ModifyKanbanSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -38,13 +38,13 @@ export const ModifyKanbanSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetAllKanbanSchema: FastifyOasSchema = {
+export const GetAllKanbanSchema: FastifySchema = {
     produces: ["application/json"],
     description: "Get all kanbans",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetOneKanbanSchema: FastifyOasSchema = {
+export const GetOneKanbanSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -65,7 +65,7 @@ export const GetOneKanbanSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const AddEventSchema: FastifyOasSchema = {
+export const AddEventSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -87,7 +87,7 @@ export const AddEventSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const DeleteOneKanbanSchema: FastifyOasSchema = {
+export const DeleteOneKanbanSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {

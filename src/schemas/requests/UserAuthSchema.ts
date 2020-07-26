@@ -1,5 +1,5 @@
 import { JSONSchema7 } from "json-schema";
-import { FastifyOasSchema } from "fastify";
+import { FastifySchema } from "fastify";
 import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
 
@@ -24,7 +24,7 @@ const RegisterFormSchema: JSONSchema7 = {
     required: ["username", "password", "email"],
 };
 
-export const UserLoginSchema: FastifyOasSchema = {
+export const UserLoginSchema: FastifySchema = {
     body: LoginFormSchema,
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
@@ -32,7 +32,7 @@ export const UserLoginSchema: FastifyOasSchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const UserRegisterSchema: FastifyOasSchema = {
+export const UserRegisterSchema: FastifySchema = {
     body: RegisterFormSchema,
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
