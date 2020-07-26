@@ -82,20 +82,16 @@ const addEvent = async (
     const kanban = await Kanban.findOne({ id: kanbanId, owner: user });
     if (!kanban) throw new NotFoundError("Kanban not found");
 
-    // Remove from original kanban (if exist)
-    const origKanban = event.kanban;
-
     // If it's a new event (original kanban does not exist), just add it
     // Otherwise, perform a splice, remove from the old one and insert to the new one
-    if (origKanban) {
-        await Kanban.updateOne(origKanban, { $pull: { events: event } });
+    if (event.kanban) {
+        await Kanban.updateOne(event.kanban, { $pull: { events: event } });
     }
 
     kanban.events.splice(req.body.idx, 0, event);
     await kanban.save();
 
-    event.kanban = kanban;
-    await event.save();
+    await Event.updateOne(event, { kanban });
 
     reply.code(200).send({
         message: "Event added",
