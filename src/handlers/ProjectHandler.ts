@@ -1,5 +1,6 @@
 import { UserDoc } from "../models/UserModel";
 import Project from "../models/ProjectModel";
+import Kanban from "../models/KanbanModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import {
     CreateProjectSchema,
@@ -8,6 +9,7 @@ import {
     GetAllProjectsSchema,
     DeleteOneProjectSchema,
     GetRelatedKanbansSchema,
+    AddKanbanSchema,
 } from "../schemas/requests/ProjectSchema";
 import { getUserFromReq } from "../common/UserFetcher";
 import { NotFoundError } from "../common/Errors";
@@ -124,6 +126,35 @@ const getRelatedKanbans = async (
     });
 };
 
+const addKanbanToProject = async (
+    req: FastifyRequest<{ Params: { name: string }; Body: { id: string } }>,
+    reply: FastifyReply,
+): Promise<void> => {
+    const user = await getUserFromReq(req);
+    const name = req.params.name;
+    const kanbanId = req.body.id;
+
+    const kanban = await Kanban.findById(kanbanId);
+    if (!kanban) throw new NotFoundError(`Kanban ${kanbanId} not found`);
+
+    const project = await Project.findOne({ name, owner: user });
+    if (!project) throw new NotFoundError(`Project ${name} not found`);
+
+    if (kanban.project) {
+        await Project.updateOne(kanban.project, { $pull: { kanbans: kanban } });
+    }
+
+    await Kanban.updateOne(kanban, { project });
+    await Project.updateOne(project, { $push: { kanbans: kanban } });
+
+    reply.code(200).send({
+        message: "OK",
+        data: {
+            kanbans: project.kanbans,
+        },
+    });
+};
+
 const deleteOneProject = async (
     req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
@@ -152,4 +183,5 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
     instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
     instance.get("/project/:name/kanban", { schema: GetRelatedKanbansSchema }, getRelatedKanbans);
+    instance.post("/project/:name/kanban", { schema: AddKanbanSchema }, addKanbanToProject);
 }
