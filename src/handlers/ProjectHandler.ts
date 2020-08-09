@@ -95,7 +95,7 @@ const getOneProject = async (
     const project = await Project.findOne({
         owner: user,
         $or: [{ id: nameOrId }, { name: nameOrId }],
-    }).select("_id name description owner members kanbans -__v");
+    }).select("_id name description owner members lists -__v");
 
     reply.code(200).send({
         message: "OK",
@@ -112,7 +112,7 @@ const getRelatedLists = async (
     const user = await getUserFromReq(req);
     const name = req.params.name;
     const project = await Project.findOne({ owner: user, name }).populate({
-        path: "kanbans",
+        path: "lists",
         select: "_id title description createdBy project events -__v",
     });
 
@@ -121,7 +121,7 @@ const getRelatedLists = async (
     reply.code(200).send({
         message: "OK",
         data: {
-            kanbans: project.lists,
+            lists: project.lists,
         },
     });
 };
@@ -132,25 +132,25 @@ const addListToProject = async (
 ): Promise<void> => {
     const user = await getUserFromReq(req);
     const name = req.params.name;
-    const kanbanId = req.body.id;
+    const listId = req.body.id;
 
-    const kanban = await List.findById(kanbanId);
-    if (!kanban) throw new NotFoundError(`List ${kanbanId} not found`);
+    const list = await List.findById(listId);
+    if (!list) throw new NotFoundError(`List ${listId} not found`);
 
     const project = await Project.findOne({ name, owner: user });
     if (!project) throw new NotFoundError(`Project ${name} not found`);
 
-    if (kanban.project) {
-        await Project.updateOne(kanban.project, { $pull: { kanbans: kanban } });
+    if (list.project) {
+        await Project.updateOne(list.project, { $pull: { lists: list } });
     }
 
-    await List.updateOne(kanban, { project });
-    await Project.updateOne(project, { $push: { kanbans: kanban } });
+    await List.updateOne(list, { project });
+    await Project.updateOne(project, { $push: { lists: list } });
 
     reply.code(200).send({
         message: "OK",
         data: {
-            kanbans: project.lists,
+            lists: project.lists,
         },
     });
 };
@@ -182,6 +182,6 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/project", { schema: GetAllProjectsSchema }, getAllProjects);
     instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
     instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
-    instance.get("/project/:name/kanban", { schema: GetRelatedListsSchema }, getRelatedLists);
-    instance.post("/project/:name/kanban", { schema: AddListSchema }, addListToProject);
+    instance.get("/project/:name/list", { schema: GetRelatedListsSchema }, getRelatedLists);
+    instance.post("/project/:name/list", { schema: AddListSchema }, addListToProject);
 }
