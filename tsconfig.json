@@ -15,8 +15,8 @@
       ]
     },
     "typeRoots": [
-      "node_modules/@types",
-      "index.d.ts",
+      "./src/types",
+      "./node_modules/@types"
     ],
     "strict": true,
     "strictNullChecks": true,
