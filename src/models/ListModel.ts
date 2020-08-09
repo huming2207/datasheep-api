@@ -3,7 +3,7 @@ import { UserDoc } from "./UserModel";
 import { ProjectDoc } from "./ProjectModel";
 import { EventDoc } from "./EventModel";
 
-export interface KanbanDoc extends Document {
+export interface ListDoc extends Document {
     title: string;
     color: number;
     description: string;
@@ -14,7 +14,7 @@ export interface KanbanDoc extends Document {
     updated: Date;
 }
 
-export const KanbanSchema = new Schema(
+export const ListSchema = new Schema(
     {
         title: { type: String, unique: true, required: true },
         color: { type: Number },
@@ -26,4 +26,4 @@ export const KanbanSchema = new Schema(
     { timestamps: { createdAt: "created", updatedAt: "updated" } },
 );
 
-export default model<KanbanDoc>("Kanban", KanbanSchema);
+export default model<ListDoc>("List", ListSchema);

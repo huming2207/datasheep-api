@@ -58,7 +58,7 @@ export const GetOneProjectSchema: FastifySchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetRelatedKanbansSchema: FastifySchema = {
+export const GetRelatedListsSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -68,7 +68,7 @@ export const GetRelatedKanbansSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Get all related kanbans in one project",
+    description: "Get all related lists in one project",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
@@ -86,7 +86,7 @@ export const DeleteOneProjectSchema: FastifySchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const AddKanbanSchema: FastifySchema = {
+export const AddListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -103,6 +103,6 @@ export const AddKanbanSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Add a kanban to a project",
+    description: "Add a list to a project",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };

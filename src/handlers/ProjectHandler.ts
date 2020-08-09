@@ -1,6 +1,6 @@
 import { UserDoc } from "../models/UserModel";
 import Project from "../models/ProjectModel";
-import Kanban from "../models/KanbanModel";
+import List from "../models/ListModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import {
     CreateProjectSchema,
@@ -8,8 +8,8 @@ import {
     GetOneProjectSchema,
     GetAllProjectsSchema,
     DeleteOneProjectSchema,
-    GetRelatedKanbansSchema,
-    AddKanbanSchema,
+    GetRelatedListsSchema,
+    AddListSchema,
 } from "../schemas/requests/ProjectSchema";
 import { getUserFromReq } from "../common/UserFetcher";
 import { NotFoundError } from "../common/Errors";
@@ -105,7 +105,7 @@ const getOneProject = async (
     });
 };
 
-const getRelatedKanbans = async (
+const getRelatedLists = async (
     req: FastifyRequest<{ Params: { name: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -121,12 +121,12 @@ const getRelatedKanbans = async (
     reply.code(200).send({
         message: "OK",
         data: {
-            kanbans: project.kanbans,
+            kanbans: project.lists,
         },
     });
 };
 
-const addKanbanToProject = async (
+const addListToProject = async (
     req: FastifyRequest<{ Params: { name: string }; Body: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -134,8 +134,8 @@ const addKanbanToProject = async (
     const name = req.params.name;
     const kanbanId = req.body.id;
 
-    const kanban = await Kanban.findById(kanbanId);
-    if (!kanban) throw new NotFoundError(`Kanban ${kanbanId} not found`);
+    const kanban = await List.findById(kanbanId);
+    if (!kanban) throw new NotFoundError(`List ${kanbanId} not found`);
 
     const project = await Project.findOne({ name, owner: user });
     if (!project) throw new NotFoundError(`Project ${name} not found`);
@@ -144,13 +144,13 @@ const addKanbanToProject = async (
         await Project.updateOne(kanban.project, { $pull: { kanbans: kanban } });
     }
 
-    await Kanban.updateOne(kanban, { project });
+    await List.updateOne(kanban, { project });
     await Project.updateOne(project, { $push: { kanbans: kanban } });
 
     reply.code(200).send({
         message: "OK",
         data: {
-            kanbans: project.kanbans,
+            kanbans: project.lists,
         },
     });
 };
@@ -182,6 +182,6 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/project", { schema: GetAllProjectsSchema }, getAllProjects);
     instance.get("/project/:name", { schema: GetOneProjectSchema }, getOneProject);
     instance.delete("/project/:name", { schema: DeleteOneProjectSchema }, deleteOneProject);
-    instance.get("/project/:name/kanban", { schema: GetRelatedKanbansSchema }, getRelatedKanbans);
-    instance.post("/project/:name/kanban", { schema: AddKanbanSchema }, addKanbanToProject);
+    instance.get("/project/:name/kanban", { schema: GetRelatedListsSchema }, getRelatedLists);
+    instance.post("/project/:name/kanban", { schema: AddListSchema }, addListToProject);
 }

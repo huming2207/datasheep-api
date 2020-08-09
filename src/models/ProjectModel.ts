@@ -1,13 +1,13 @@
 import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
-import { KanbanDoc } from "./KanbanModel";
+import { ListDoc } from "./ListModel";
 
 export interface ProjectDoc extends Document {
     name: string;
     description: string;
     owner: UserDoc;
     members: UserDoc[];
-    kanbans: KanbanDoc[];
+    lists: ListDoc[];
     created: Date;
     updated: Date;
 }
@@ -18,7 +18,7 @@ export const ProjectSchema = new Schema(
         description: { type: String },
         owner: { type: Types.ObjectId, ref: "User" },
         members: [{ type: Types.ObjectId, ref: "User" }],
-        kanbans: [{ type: Types.ObjectId, ref: "Kanban" }],
+        lists: [{ type: Types.ObjectId, ref: "List" }],
     },
     { timestamps: { createdAt: "created", updatedAt: "updated" } },
 );

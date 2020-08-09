@@ -2,7 +2,7 @@ import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
 import { FastifySchema } from "fastify";
 
-export const CreateKanbanSchema: FastifySchema = {
+export const CreateListSchema: FastifySchema = {
     body: {
         type: "object",
         properties: {
@@ -13,11 +13,11 @@ export const CreateKanbanSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Create a new kanban",
+    description: "Create a new list",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const ModifyKanbanSchema: FastifySchema = {
+export const ModifyListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -34,17 +34,17 @@ export const ModifyKanbanSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Modify a kanban",
+    description: "Modify a list",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetAllKanbanSchema: FastifySchema = {
+export const GetAllListSchema: FastifySchema = {
     produces: ["application/json"],
-    description: "Get all kanbans",
+    description: "Get all lists",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const GetOneKanbanSchema: FastifySchema = {
+export const GetOneListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -61,11 +61,11 @@ export const GetOneKanbanSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Get one kanban",
+    description: "Get one list",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const AddEventSchema: FastifySchema = {
+export const AddEventToListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -83,11 +83,11 @@ export const AddEventSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Add an event to kanban",
+    description: "Add an event to list",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const DeleteOneKanbanSchema: FastifySchema = {
+export const DeleteOneListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
@@ -97,6 +97,6 @@ export const DeleteOneKanbanSchema: FastifySchema = {
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
-    description: "Delete one kanban",
+    description: "Delete one list",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
