@@ -7,6 +7,7 @@ import Middie from "middie";
 import AuthHandler from "../handlers/AuthHandler";
 import ProtectedRequests from "../handlers/ProtectedRequests";
 import { connectToDb } from "./Database";
+import { CreateEventBody } from "../schemas/requests/EventSchema";
 
 export const buildFastify = async (): Promise<FastifyInstance> => {
     const logger = pino({
@@ -18,6 +19,8 @@ export const buildFastify = async (): Promise<FastifyInstance> => {
     const server = fastify({
         logger,
     });
+
+    server.addSchema(CreateEventBody);
 
     if (process.env.DS_DISABLE_SWAGGER !== "true") {
         server.register(FastifyOas, {

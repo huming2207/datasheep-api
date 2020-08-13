@@ -1,17 +1,23 @@
 import { FastifySchema } from "fastify";
 import { SuccessResponseSchema } from "../responses/SuccessResponseSchema";
 import { ErrorSchema } from "../responses/ErrorResponseSchema";
+import { JSONSchema7, JSONSchema4 } from "json-schema";
+
+export const CreateEventBody: JSONSchema4 = {
+    $id: "#createEvent",
+    type: "object",
+    properties: {
+        title: { type: "string", minLength: 1, maxLength: 30 },
+        content: { type: "string", optional: true },
+        due: { type: "string", format: "date-time", optional: true },
+        color: { type: "integer", minimum: 0, maximum: 0xffffffff, optional: true }, // RGBA, 32-bit
+    },
+    required: ["title"],
+};
 
 export const CreateEventSchema: FastifySchema = {
     body: {
-        type: "object",
-        properties: {
-            title: { type: "string", minLength: 1, maxLength: 30 },
-            content: { type: "string", optional: true },
-            due: { type: "string", format: "date-time", optional: true },
-            color: { type: "integer", minimum: 0, maximum: 0xffffffff, optional: true }, // RGBA, 32-bit
-        },
-        required: ["title"],
+        $ref: "#createEvent",
     },
     consumes: ["application/x-www-form-urlencoded"],
     produces: ["application/json"],
