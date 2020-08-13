@@ -2,7 +2,7 @@ import { UserDoc } from "./UserModel";
 import { ProjectDoc } from "./ProjectModel";
 import { EventDoc } from "./EventModel";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
-import { prop } from "@typegoose/typegoose";
+import { prop, getModelForClass } from "@typegoose/typegoose";
 
 export class ListDoc extends TimeStamps {
     @prop({ required: true })
@@ -23,3 +23,5 @@ export class ListDoc extends TimeStamps {
     @prop({ ref: EventDoc })
     public events?: EventDoc[];
 }
+
+export const ListModel = getModelForClass(ListDoc);

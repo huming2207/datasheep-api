@@ -2,7 +2,7 @@ import { UserDoc } from "./UserModel";
 import { FileDoc } from "./FileModel";
 import { ListDoc } from "./ListModel";
 
-import { prop } from "@typegoose/typegoose";
+import { prop, getModelForClass } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
 export class EventDoc extends TimeStamps {
@@ -30,3 +30,5 @@ export class EventDoc extends TimeStamps {
     @prop({ ref: FileDoc })
     public attachments?: FileDoc[];
 }
+
+export const EventModel = getModelForClass(EventDoc);
