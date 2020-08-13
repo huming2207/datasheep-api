@@ -1,33 +1,32 @@
-import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
 import { FileDoc } from "./FileModel";
 import { ListDoc } from "./ListModel";
 
-export interface EventDoc extends Document {
-    title: string;
-    content: string;
-    color: number;
-    due: Date;
-    owner: UserDoc;
-    assignedTo: UserDoc[];
-    list: ListDoc;
-    attachments: FileDoc[];
-    created: Date;
-    updated: Date;
+import { prop } from "@typegoose/typegoose";
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+
+export class EventDoc extends TimeStamps {
+    @prop({ required: true })
+    public title!: string;
+
+    @prop({ required: true })
+    public content!: string;
+
+    @prop()
+    public color?: number;
+
+    @prop()
+    public due?: Date;
+
+    @prop({ ref: UserDoc })
+    public owner?: UserDoc;
+
+    @prop({ ref: UserDoc })
+    public assignedTo?: UserDoc[];
+
+    @prop({ required: true, ref: ListDoc })
+    public list!: ListDoc;
+
+    @prop({ ref: FileDoc })
+    public attachments?: FileDoc[];
 }
-
-export const EventSchema = new Schema(
-    {
-        title: { type: String, unique: true },
-        content: { type: String },
-        color: { type: Number },
-        due: { type: Date },
-        owner: { type: Types.ObjectId, ref: "User" },
-        assignedTo: [{ type: Types.ObjectId, ref: "User" }],
-        list: { type: Types.ObjectId, ref: "List" },
-        attachments: [{ type: Types.ObjectId, ref: "File" }],
-    },
-    { timestamps: { createdAt: "created", updatedAt: "updated" } },
-);
-
-export default model<EventDoc>("Event", EventSchema);

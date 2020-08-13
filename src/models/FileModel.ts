@@ -1,27 +1,21 @@
-import { Document, Schema, model, Types } from "mongoose";
+import { Types } from "mongoose";
 import { UserDoc } from "./UserModel";
+import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { prop } from "@typegoose/typegoose";
 
-export interface FileDoc extends Document {
-    name: string;
-    type: string;
-    size: number;
-    storeId: Types.ObjectId;
-    owner: UserDoc;
-    created: Date;
-    updated: Date;
+export class FileDoc extends TimeStamps {
+    @prop({ required: true })
+    public name!: string;
+
+    @prop({ required: true })
+    public type!: string;
+
+    @prop({ required: true })
+    public size!: number;
+
+    @prop({ required: true })
+    public storeId!: Types.ObjectId;
+
+    @prop({ required: true, ref: UserDoc })
+    public owner!: UserDoc;
 }
-
-export const FileSchema = new Schema(
-    {
-        name: { type: String },
-        type: { type: String },
-        size: { type: Number },
-        storeId: { type: Types.ObjectId },
-        owner: { type: Types.ObjectId, ref: "User" },
-        created: { type: Date },
-        updated: { type: Date },
-    },
-    { timestamps: { createdAt: "created", updatedAt: "updated" } },
-);
-
-export default model<FileDoc>("File", FileSchema);
