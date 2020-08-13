@@ -1,4 +1,3 @@
-import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
 import { ProjectDoc } from "./ProjectModel";
 import { EventDoc } from "./EventModel";

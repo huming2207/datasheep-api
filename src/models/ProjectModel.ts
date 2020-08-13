@@ -1,4 +1,3 @@
-import { Document, Schema, model, Types } from "mongoose";
 import { UserDoc } from "./UserModel";
 import { ListDoc } from "./ListModel";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
