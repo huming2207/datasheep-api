@@ -88,7 +88,13 @@ const addList = async (
         await List.updateOne(event.list, { $pull: { events: event } });
     }
 
-    list.events.splice(req.body.idx, 0, event);
+    if (list.events) {
+        list.events.splice(req.body.idx, 0, event);
+    } else {
+        list.events = [];
+        list.events.push(event);
+    }
+
     await list.save();
 
     await Event.updateOne(event, { list });

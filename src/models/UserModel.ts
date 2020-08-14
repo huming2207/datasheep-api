@@ -1,7 +1,7 @@
+import { prop, getModelForClass, DocumentType } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
-import { prop, getModelForClass } from "@typegoose/typegoose";
 
-export class UserDoc extends TimeStamps {
+export class UserData extends TimeStamps {
     @prop({ required: true })
     public username!: string;
 
@@ -12,4 +12,6 @@ export class UserDoc extends TimeStamps {
     public email!: string;
 }
 
-export const UserModel = getModelForClass(UserDoc);
+export type UserDoc = DocumentType<UserData>;
+export const UserModel = getModelForClass(UserData, { schemaOptions: { timestamps: true } });
+export default UserModel;

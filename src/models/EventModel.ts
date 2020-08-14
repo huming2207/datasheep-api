@@ -1,11 +1,11 @@
-import { UserDoc } from "./UserModel";
-import { FileDoc } from "./FileModel";
+import { UserDoc, UserData } from "./UserModel";
+import { FileDoc, FileData } from "./FileModel";
 import { ListDoc } from "./ListModel";
 
-import { prop, getModelForClass } from "@typegoose/typegoose";
+import { prop, getModelForClass, DocumentType } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-export class EventDoc extends TimeStamps {
+export class EventData extends TimeStamps {
     @prop({ required: true })
     public title!: string;
 
@@ -18,17 +18,19 @@ export class EventDoc extends TimeStamps {
     @prop()
     public due?: Date;
 
-    @prop({ ref: UserDoc })
+    @prop({ ref: UserData })
     public owner?: UserDoc;
 
-    @prop({ ref: UserDoc })
+    @prop({ ref: UserData })
     public assignedTo?: UserDoc[];
 
-    @prop({ required: true, ref: ListDoc })
+    @prop({ required: true, ref: UserData })
     public list!: ListDoc;
 
-    @prop({ ref: FileDoc })
+    @prop({ ref: FileData })
     public attachments?: FileDoc[];
 }
 
-export const EventModel = getModelForClass(EventDoc);
+export type EventDoc = DocumentType<EventData>;
+export const EventModel = getModelForClass(EventData, { schemaOptions: { timestamps: true } });
+export default EventModel;
