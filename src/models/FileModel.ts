@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
-import { UserDoc, UserData } from "./UserModel";
-import { prop, getModelForClass, DocumentType } from "@typegoose/typegoose";
+import { UserDoc } from "./UserModel";
+import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-export class FileData extends TimeStamps {
+export class File extends TimeStamps {
     @prop({ required: true })
     public name!: string;
 
@@ -16,10 +16,10 @@ export class FileData extends TimeStamps {
     @prop({ required: true })
     public storeId!: Types.ObjectId;
 
-    @prop({ required: true, ref: UserData })
-    public owner!: UserDoc;
+    @prop({ required: true, ref: "User" })
+    public owner!: Ref<UserDoc>;
 }
 
-export type FileDoc = DocumentType<FileData>;
-export const FileModel = getModelForClass(FileData, { schemaOptions: { timestamps: true } });
+export type FileDoc = DocumentType<File>;
+export const FileModel = getModelForClass(File, { schemaOptions: { timestamps: true } });
 export default FileModel;

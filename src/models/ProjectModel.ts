@@ -1,25 +1,25 @@
-import { UserDoc, UserData } from "./UserModel";
-import { ListDoc, ListData } from "./ListModel";
-import { prop, getModelForClass, DocumentType } from "@typegoose/typegoose";
+import { UserDoc } from "./UserModel";
+import { ListDoc } from "./ListModel";
+import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
-export class ProjectData extends TimeStamps {
+export class Project extends TimeStamps {
     @prop({ required: true })
     public name!: string;
 
     @prop()
     public description?: string;
 
-    @prop({ required: true, ref: UserData })
-    public owner!: UserDoc;
+    @prop({ required: true, ref: "User" })
+    public owner!: Ref<UserDoc>;
 
-    @prop({ ref: UserData })
-    public members?: UserDoc[];
+    @prop({ ref: "User" })
+    public members?: Ref<UserDoc>[];
 
-    @prop({ ref: ListData })
-    public lists?: ListDoc[];
+    @prop({ ref: "List" })
+    public lists?: Ref<ListDoc>[];
 }
 
-export type ProjectDoc = DocumentType<ProjectData>;
-export const ProjectModel = getModelForClass(ProjectData, { schemaOptions: { timestamps: true } });
+export type ProjectDoc = DocumentType<Project>;
+export const ProjectModel = getModelForClass(Project, { schemaOptions: { timestamps: true } });
 export default ProjectModel;
