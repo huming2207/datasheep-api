@@ -1,6 +1,6 @@
-import { UserDoc } from "./UserModel";
-import { ProjectDoc } from "./ProjectModel";
-import { EventDoc } from "./EventModel";
+import { User } from "./UserModel";
+import { Project } from "./ProjectModel";
+import { EventDoc, Event } from "./EventModel";
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
 
@@ -14,13 +14,13 @@ export class List extends TimeStamps {
     @prop()
     public description?: string;
 
-    @prop({ required: true, ref: "User" })
-    public owner!: Ref<UserDoc>;
+    @prop({ required: true, ref: () => User })
+    public owner!: Ref<User>;
 
-    @prop({ required: true, ref: "Project" })
-    public project!: Ref<ProjectDoc>;
+    @prop({ required: true, ref: () => Project })
+    public project!: Ref<Project>;
 
-    @prop({ ref: "Event" })
+    @prop({ ref: () => [Event] })
     public events?: Ref<EventDoc>[];
 }
 

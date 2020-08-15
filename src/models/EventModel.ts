@@ -1,6 +1,6 @@
-import { UserDoc } from "./UserModel";
-import { FileDoc } from "./FileModel";
-import { ListDoc } from "./ListModel";
+import { User } from "./UserModel";
+import { File } from "./FileModel";
+import { List } from "./ListModel";
 
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
 import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
@@ -18,17 +18,17 @@ export class Event extends TimeStamps {
     @prop()
     public due?: Date;
 
-    @prop({ ref: "User" })
-    public owner?: Ref<UserDoc>;
+    @prop({ ref: () => User })
+    public owner?: Ref<User>;
 
-    @prop({ ref: "User" })
-    public assignedTo?: Ref<UserDoc>[];
+    @prop({ ref: () => [User] })
+    public assignedTo?: Ref<User>[];
 
-    @prop({ required: true, ref: "User" })
-    public list!: Ref<ListDoc>;
+    @prop({ required: true, ref: () => List })
+    public list!: Ref<List>;
 
-    @prop({ ref: "File" })
-    public attachments?: Ref<FileDoc>[];
+    @prop({ ref: () => [File] })
+    public attachments?: Ref<File>[];
 }
 
 export type EventDoc = DocumentType<Event>;
