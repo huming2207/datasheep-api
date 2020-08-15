@@ -9,7 +9,7 @@ export class User extends Base<Types.ObjectId> {
     @prop({ required: true })
     public username!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, select: false })
     public password!: string;
 
     @prop({ required: true })
