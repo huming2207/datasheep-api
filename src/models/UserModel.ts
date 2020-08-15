@@ -1,15 +1,18 @@
-import { Document, Schema, model } from "mongoose";
+import { prop, getModelForClass, DocumentType } from "@typegoose/typegoose";
+import { Base } from "@typegoose/typegoose/lib/defaultClasses";
+import { Types } from "mongoose";
 
-export interface UserDoc extends Document {
-    username: string;
-    password: string;
-    email: string;
+export class User extends Base<Types.ObjectId> {
+    @prop({ required: true })
+    public username!: string;
+
+    @prop({ required: true })
+    public password!: string;
+
+    @prop({ required: true })
+    public email!: string;
 }
 
-export const UserSchema = new Schema({
-    username: { type: String, unique: true },
-    password: { type: String },
-    email: { type: String, unique: true },
-});
-
-export default model<UserDoc>("User", UserSchema);
+export type UserDoc = DocumentType<User>;
+export const UserModel = getModelForClass(User, { schemaOptions: { timestamps: true } });
+export default UserModel;

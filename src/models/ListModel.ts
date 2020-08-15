@@ -1,29 +1,29 @@
-import { Document, Schema, model, Types } from "mongoose";
-import { UserDoc } from "./UserModel";
-import { ProjectDoc } from "./ProjectModel";
-import { EventDoc } from "./EventModel";
+import { User } from "./UserModel";
+import { Project } from "./ProjectModel";
+import { EventDoc, Event } from "./EventModel";
+import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
+import { BaseModel } from "./BaseModel";
 
-export interface ListDoc extends Document {
-    title: string;
-    color: number;
-    description: string;
-    owner: UserDoc;
-    project: ProjectDoc;
-    events: EventDoc[];
-    created: Date;
-    updated: Date;
+export class List extends BaseModel {
+    @prop({ required: true })
+    public title!: string;
+
+    @prop()
+    public color?: number;
+
+    @prop()
+    public description?: string;
+
+    @prop({ required: true, ref: () => User })
+    public owner!: Ref<User>;
+
+    @prop({ required: true, ref: () => Project })
+    public project!: Ref<Project>;
+
+    @prop({ ref: () => [Event] })
+    public events?: Ref<EventDoc>[];
 }
 
-export const ListSchema = new Schema(
-    {
-        title: { type: String, unique: true, required: true },
-        color: { type: Number },
-        description: { type: String },
-        owner: { type: Types.ObjectId, ref: "User" },
-        project: { type: Types.ObjectId, ref: "Project" },
-        events: [{ type: Types.ObjectId, ref: "Event" }],
-    },
-    { timestamps: { createdAt: "created", updatedAt: "updated" } },
-);
-
-export default model<ListDoc>("List", ListSchema);
+export type ListDoc = DocumentType<List>;
+export const ListModel = getModelForClass(List, { schemaOptions: { timestamps: true } });
+export default ListModel;

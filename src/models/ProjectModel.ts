@@ -1,26 +1,25 @@
-import { Document, Schema, model, Types } from "mongoose";
-import { UserDoc } from "./UserModel";
-import { ListDoc } from "./ListModel";
+import { User } from "./UserModel";
+import { List } from "./ListModel";
+import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
+import { BaseModel } from "./BaseModel";
 
-export interface ProjectDoc extends Document {
-    name: string;
-    description: string;
-    owner: UserDoc;
-    members: UserDoc[];
-    lists: ListDoc[];
-    created: Date;
-    updated: Date;
+export class Project extends BaseModel {
+    @prop({ required: true })
+    public name!: string;
+
+    @prop()
+    public description?: string;
+
+    @prop({ required: true, ref: () => User })
+    public owner!: Ref<User>;
+
+    @prop({ ref: () => [User] })
+    public members?: Ref<User>[];
+
+    @prop({ ref: () => [List] })
+    public lists?: Ref<List>[];
 }
 
-export const ProjectSchema = new Schema(
-    {
-        name: { type: String, unique: true },
-        description: { type: String },
-        owner: { type: Types.ObjectId, ref: "User" },
-        members: [{ type: Types.ObjectId, ref: "User" }],
-        lists: [{ type: Types.ObjectId, ref: "List" }],
-    },
-    { timestamps: { createdAt: "created", updatedAt: "updated" } },
-);
-
-export default model<ProjectDoc>("Project", ProjectSchema);
+export type ProjectDoc = DocumentType<Project>;
+export const ProjectModel = getModelForClass(Project, { schemaOptions: { timestamps: true } });
+export default ProjectModel;
