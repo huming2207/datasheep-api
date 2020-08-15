@@ -1,9 +1,9 @@
 import { Types } from "mongoose";
 import { User } from "./UserModel";
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
-import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { BaseModel } from "./BaseModel";
 
-export class File extends TimeStamps {
+export class File extends BaseModel {
     @prop({ required: true })
     public name!: string;
 

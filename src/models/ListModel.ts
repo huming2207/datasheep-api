@@ -2,9 +2,9 @@ import { User } from "./UserModel";
 import { Project } from "./ProjectModel";
 import { EventDoc, Event } from "./EventModel";
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
-import { TimeStamps } from "@typegoose/typegoose/lib/defaultClasses";
+import { BaseModel } from "./BaseModel";
 
-export class List extends TimeStamps {
+export class List extends BaseModel {
     @prop({ required: true })
     public title!: string;
 

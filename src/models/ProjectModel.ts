@@ -1,8 +1,9 @@
 import { User } from "./UserModel";
 import { List } from "./ListModel";
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
+import { BaseModel } from "./BaseModel";
 
-export class Project {
+export class Project extends BaseModel {
     @prop({ required: true })
     public name!: string;
 
