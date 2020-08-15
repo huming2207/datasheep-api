@@ -26,7 +26,7 @@ const RegisterFormSchema: JSONSchema7 = {
 
 export const UserLoginSchema: FastifySchema = {
     body: LoginFormSchema,
-    consumes: ["application/x-www-form-urlencoded"],
+    consumes: ["application/x-www-form-urlencoded", "application/json"],
     produces: ["application/json"],
     description: "Register a new user",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
@@ -34,7 +34,7 @@ export const UserLoginSchema: FastifySchema = {
 
 export const UserRegisterSchema: FastifySchema = {
     body: RegisterFormSchema,
-    consumes: ["application/x-www-form-urlencoded"],
+    consumes: ["application/x-www-form-urlencoded", "application/json"],
     produces: ["application/json"],
     description: "User login, and get a new JWT token",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
