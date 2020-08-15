@@ -31,7 +31,7 @@ export const buildFastify = async (): Promise<FastifyInstance> => {
                 },
                 servers: [
                     {
-                        url: "http://127.0.0.1:3000",
+                        url: "http://127.0.0.1:5000",
                         description: "Dev server",
                     },
                 ],
@@ -71,7 +71,7 @@ export const buildServer = async (): Promise<void> => {
         const fastify = await buildFastify();
 
         await fastify.listen(
-            parseInt(process.env.DS_PORT || "6000"),
+            parseInt(process.env.DS_PORT || "5000"),
             process.env.DS_ADDR || "localhost",
         );
 
