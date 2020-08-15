@@ -10,16 +10,12 @@ const userRegister = async (
     req: FastifyRequest<{ Body: { username: string; password: string; email: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const username = req.body["username"] as string;
-    const password = req.body["password"] as string;
-    const email = req.body["email"] as string;
+    const username = req.body.username;
+    const password = req.body.password;
+    const email = req.body.password;
 
     try {
-        const createdUser = await User.create<{
-            username: string;
-            password: string;
-            email: string;
-        }>({
+        const createdUser = await User.create({
             username,
             password: await argon2.hash(password),
             email,
