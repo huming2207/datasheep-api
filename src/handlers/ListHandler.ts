@@ -1,8 +1,7 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
 import List from "../models/ListModel";
-import { UserDoc } from "../models/UserModel";
+import User, { UserDoc } from "../models/UserModel";
 import { NotFoundError } from "../common/Errors";
 import {
     GetAllListSchema,
@@ -14,7 +13,7 @@ import {
 } from "../schemas/requests/ListSchema";
 
 const getAllLists = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const lists = await List.find({ owner: user }).select(
         "_id title description owner project -__v -events", // Filter out events (or it will be a super long response...)
     );
@@ -31,7 +30,7 @@ const getOneList = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params.id;
     const list = await List.findOne({ owner: user, _id: id }).select(
         "_id title description owner project events -__v",
@@ -49,7 +48,7 @@ const createList = async (
     req: FastifyRequest<{ Body: { color?: number; title: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const color = req.body.color || 0;
     const title = req.body.title;
     const list = await List.create<{ title: string; color: number; owner: UserDoc }>({
@@ -70,7 +69,7 @@ const addList = async (
     req: FastifyRequest<{ Params: { id: string }; Body: { event: string; idx: number } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const listId = req.params.id;
     const eventId = req.body.event;
 
@@ -115,7 +114,7 @@ const modifyList = async (
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params["id"] as string;
 
     const list = await List.findOne({ id, owner: user });
@@ -138,7 +137,7 @@ const deleteList = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params.id;
     const list = await List.findOne({ id, owner: user });
     if (!list) throw new NotFoundError("List not found");

@@ -1,4 +1,4 @@
-import { UserDoc } from "../models/UserModel";
+import User, { UserDoc } from "../models/UserModel";
 import Project from "../models/ProjectModel";
 import List from "../models/ListModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
@@ -11,14 +11,13 @@ import {
     GetRelatedListsSchema,
     AddListSchema,
 } from "../schemas/requests/ProjectSchema";
-import { getUserFromReq } from "../common/UserFetcher";
 import { NotFoundError } from "../common/Errors";
 
 const createNewProject = async (
     req: FastifyRequest<{ Body: { name: string; description: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const name = req.body.name;
     const description = req.body.description;
 
@@ -46,7 +45,7 @@ const modifyProject = async (
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const nameOrId = req.params.nameOrId;
     const project = await Project.findOne({
         owner: user,
@@ -71,7 +70,7 @@ const modifyProject = async (
 };
 
 const getAllProjects = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const projects = await Project.find({ owner: user }).select(
         "name description owner members -__v",
     );
@@ -90,7 +89,7 @@ const getOneProject = async (
     req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const nameOrId = req.params.nameOrId;
     const project = await Project.findOne({
         owner: user,
@@ -109,7 +108,7 @@ const getRelatedLists = async (
     req: FastifyRequest<{ Params: { name: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const name = req.params.name;
     const project = await Project.findOne({ owner: user, name }).populate({
         path: "lists",
@@ -130,7 +129,7 @@ const addListToProject = async (
     req: FastifyRequest<{ Params: { name: string }; Body: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const name = req.params.name;
     const listId = req.body.id;
 
@@ -159,7 +158,7 @@ const deleteOneProject = async (
     req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const nameOrId = req.params.nameOrId;
     const project = await Project.findOne({
         owner: user,

@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import { getUserFromReq } from "../common/UserFetcher";
 import Event from "../models/EventModel";
+import User from "../models/UserModel";
 import { UserDoc } from "../models/UserModel";
 import { NotFoundError } from "../common/Errors";
 import {
@@ -14,7 +14,7 @@ const getOneEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params.id;
     const event = await Event.findOne({ owner: user, id });
 
@@ -32,7 +32,7 @@ const createEvent = async (
     req: FastifyRequest<{ Body: { color?: number; content?: string; title: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const color = req.body.color || 0;
     const content = req.body.content || "";
     const title = req.body.title;
@@ -63,7 +63,7 @@ const modifyEvent = async (
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params["id"] as string;
     const event = await Event.findOne({ owner: user, id });
     if (!event) throw new NotFoundError("Event not found");
@@ -86,7 +86,7 @@ const deleteEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await getUserFromReq(req);
+    const user = await User.fromReq(req);
     const id = req.params["id"] as string;
 
     const event = await Event.findOne({ owner: user, id });
