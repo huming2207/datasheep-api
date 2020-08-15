@@ -128,7 +128,7 @@ const modifyList = async (
     reply.code(200).send({
         message: "List modified",
         data: {
-            id: list.id,
+            id: list._id,
         },
     });
 };
@@ -145,7 +145,7 @@ const deleteList = async (
     reply.code(200).send({
         message: "List deleted",
         data: {
-            id: list.id,
+            id: list._id,
         },
     });
 };
