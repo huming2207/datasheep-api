@@ -54,10 +54,12 @@ const userLogin = async (
 
     let user: UserDoc | null;
     try {
-        user = await User.findOne({ $or: [{ username }, { email: username }] });
+        user = await User.findOne({ $or: [{ username }, { email: username }] }).select("+password");
         if (!user || !(await argon2.verify(user.password, password))) {
             throw new UnauthorisedError("Username or password is incorrect, try again");
         }
+
+        if (!process.env.DS_JWT_SECRET) throw new InternalError("JWT secret is not set");
 
         const token = jwt.sign(
             {
@@ -65,7 +67,7 @@ const userLogin = async (
                 username: user.username,
                 email: user.email,
             },
-            process.env.DS_JWT_TOKEN || "jwtTestToken",
+            process.env.DS_JWT_SECRET,
             {
                 algorithm: "HS512",
                 expiresIn: "1h",
