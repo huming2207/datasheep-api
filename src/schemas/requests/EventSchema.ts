@@ -69,3 +69,26 @@ export const DeleteEventSchema: FastifySchema = {
     description: "Delete one event by ID",
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
+
+export const MoveEventSchema: FastifySchema = {
+    params: {
+        type: "object",
+        properties: {
+            id: { type: "string" },
+        },
+        required: ["id"],
+    },
+    body: {
+        type: "object",
+        properties: {
+            srcList: { type: "string" },
+            dstList: { type: "string" },
+            idx: { type: "number", minimum: 0 },
+        },
+        required: ["srcList", "dstList", "idx"],
+    },
+    consumes: ["application/x-www-form-urlencoded", "application/json"],
+    produces: ["application/json"],
+    description: "Move one event",
+    response: { 200: SuccessResponseSchema, ...ErrorSchema },
+};
