@@ -7,7 +7,7 @@ import {
     GetAllListSchema,
     GetOneListSchema,
     CreateListSchema,
-    AddEventToListSchema,
+    ModifyEventInListSchema,
     ModifyListSchema,
     DeleteOneListSchema,
 } from "../schemas/requests/ListSchema";
@@ -65,7 +65,7 @@ const createList = async (
     });
 };
 
-const addList = async (
+const modifyEventInList = async (
     req: FastifyRequest<{ Params: { id: string }; Body: { event: string; idx: number } }>,
     reply: FastifyReply,
 ): Promise<void> => {
@@ -95,7 +95,6 @@ const addList = async (
     }
 
     await list.save();
-
     await Event.updateOne(event, { list });
 
     reply.code(200).send({
@@ -154,7 +153,7 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/list", { schema: GetAllListSchema }, getAllLists);
     instance.get("/list/:id", { schema: GetOneListSchema }, getOneList);
     instance.post("/list", { schema: CreateListSchema }, createList);
-    instance.post("/list/:id/add", { schema: AddEventToListSchema }, addList);
+    instance.post("/list/:id/event", { schema: ModifyEventInListSchema }, modifyEventInList);
     instance.put("/list/:id", { schema: ModifyListSchema }, modifyList);
     instance.delete("/list/:id", { schema: DeleteOneListSchema }, deleteList);
 }

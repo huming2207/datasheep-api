@@ -65,7 +65,7 @@ export const GetOneListSchema: FastifySchema = {
     response: { 200: SuccessResponseSchema, ...ErrorSchema },
 };
 
-export const AddEventToListSchema: FastifySchema = {
+export const ModifyEventInListSchema: FastifySchema = {
     params: {
         type: "object",
         properties: {
