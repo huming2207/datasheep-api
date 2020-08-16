@@ -8,7 +8,9 @@ import {
     CreateEventSchema,
     ModifyEventSchema,
     DeleteEventSchema,
+    MoveEventSchema,
 } from "../schemas/requests/EventSchema";
+import List from "../models/ListModel";
 
 const getOneEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,
@@ -64,7 +66,7 @@ const modifyEvent = async (
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await User.fromReq(req);
-    const id = req.params["id"] as string;
+    const id = req.params.id;
     const event = await Event.findOne({ owner: user, id });
     if (!event) throw new NotFoundError("Event not found");
 
@@ -87,7 +89,7 @@ const deleteEvent = async (
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await User.fromReq(req);
-    const id = req.params["id"] as string;
+    const id = req.params.id;
 
     const event = await Event.findOne({ owner: user, id });
     if (!event) throw new NotFoundError("Event not found");
@@ -101,9 +103,49 @@ const deleteEvent = async (
     });
 };
 
+const moveEvent = async (
+    req: FastifyRequest<{
+        Params: { id: string };
+        Body: { srcList: string; dstList: string; idx: number };
+    }>,
+    reply: FastifyReply,
+): Promise<void> => {
+    const user = await User.fromReq(req);
+    const eventId = req.params.id;
+    const srcListId = req.body.srcList;
+    const dstListId = req.body.dstList;
+
+    const srcList = await List.findOne({ _id: srcListId, owner: user });
+    if (!srcList) throw new NotFoundError(`Source list ${srcListId} not found`);
+
+    const event = await Event.findOne({ _id: eventId, owner: user, list: srcList });
+    if (!event) throw new NotFoundError(`Event ${eventId} not found`);
+
+    // Remove event from its old place
+    await List.updateOne(srcList, { $pull: { events: event } });
+
+    // Adds it to the new place
+    const dstList = await List.findOne({ _id: dstListId, owner: user }).populate("events");
+    if (!dstList) throw new NotFoundError(`Destination list ${dstListId} not found`);
+    if (!dstList.events) dstList.events = [];
+
+    dstList.events.splice(req.body.idx, 0, event);
+    await dstList.save();
+
+    if (srcListId !== dstListId) await Event.updateOne(event, { list: dstList });
+
+    reply.code(200).send({
+        message: "Event updated",
+        data: {
+            id: event.id,
+        },
+    });
+};
+
 export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.post("/event/:id", { schema: GetOneEventSchema }, getOneEvent);
     instance.post("/event", { schema: CreateEventSchema }, createEvent);
     instance.put("/event/:id", { schema: ModifyEventSchema }, modifyEvent);
+    instance.put("/event/:id/move", { schema: MoveEventSchema }, moveEvent);
     instance.delete("/event/:id", { schema: DeleteEventSchema }, deleteEvent);
 }
