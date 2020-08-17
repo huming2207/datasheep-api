@@ -65,47 +65,6 @@ const createList = async (
     });
 };
 
-const modifyEventInList = async (
-    req: FastifyRequest<{ Params: { id: string }; Body: { event: string; idx: number } }>,
-    reply: FastifyReply,
-): Promise<void> => {
-    const user = await User.fromReq(req);
-    const listId = req.params.id;
-    const eventId = req.body.event;
-
-    // Check if this event exists...
-    const event = await Event.findOne({ id: eventId, owner: user }).populate("list");
-    if (!event) throw new NotFoundError("Event not found");
-
-    // If event is valid (exist), continue to add
-    const list = await List.findOne({ id: listId, owner: user });
-    if (!list) throw new NotFoundError("List not found");
-
-    // If it's a new event (original list does not exist), just add it
-    // Otherwise, perform a splice, remove from the old one and insert to the new one
-    if (event.list) {
-        await List.updateOne(event.list, { $pull: { events: event } });
-    }
-
-    if (list.events) {
-        list.events.splice(req.body.idx, 0, event);
-    } else {
-        list.events = [];
-        list.events.push(event);
-    }
-
-    await list.save();
-    await Event.updateOne(event, { list });
-
-    reply.code(200).send({
-        message: "Event added",
-        data: {
-            event,
-            list,
-        },
-    });
-};
-
 const modifyList = async (
     req: FastifyRequest<{
         Params: { id: string };
@@ -153,7 +112,6 @@ export default async function bootstrap(instance: FastifyInstance): Promise<void
     instance.get("/list", { schema: GetAllListSchema }, getAllLists);
     instance.get("/list/:id", { schema: GetOneListSchema }, getOneList);
     instance.post("/list", { schema: CreateListSchema }, createList);
-    instance.post("/list/:id/event", { schema: ModifyEventInListSchema }, modifyEventInList);
     instance.put("/list/:id", { schema: ModifyListSchema }, modifyList);
     instance.delete("/list/:id", { schema: DeleteOneListSchema }, deleteList);
 }

@@ -10,7 +10,8 @@ import {
     DeleteEventSchema,
     MoveEventSchema,
 } from "../schemas/requests/EventSchema";
-import List from "../models/ListModel";
+import List, { ListDoc } from "../models/ListModel";
+import { DocumentType } from "@typegoose/typegoose";
 
 const getOneEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,
@@ -31,23 +32,31 @@ const getOneEvent = async (
 };
 
 const createEvent = async (
-    req: FastifyRequest<{ Body: { color?: number; content?: string; title: string } }>,
+    req: FastifyRequest<{
+        Body: { color?: number; content?: string; title: string; list: string };
+    }>,
     reply: FastifyReply,
 ): Promise<void> => {
     const user = await User.fromReq(req);
     const color = req.body.color || 0;
     const content = req.body.content || "";
     const title = req.body.title;
+
+    const list = await List.findById(req.body.list);
+    if (!list) throw new NotFoundError(`List ${req.body.list} not found!`);
+
     const event = await Event.create<{
         owner: UserDoc;
         color: number;
         content: string;
         title: string;
+        list: any;
     }>({
         owner: user,
         color,
         content,
         title,
+        list,
     });
 
     reply.code(200).send({
