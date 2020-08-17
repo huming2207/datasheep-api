@@ -10,8 +10,7 @@ import {
     DeleteEventSchema,
     MoveEventSchema,
 } from "../schemas/requests/EventSchema";
-import List, { ListDoc } from "../models/ListModel";
-import { DocumentType } from "@typegoose/typegoose";
+import List from "../models/ListModel";
 
 const getOneEvent = async (
     req: FastifyRequest<{ Params: { id: string } }>,

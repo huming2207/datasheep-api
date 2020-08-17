@@ -1,5 +1,4 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import Event from "../models/EventModel";
 import List from "../models/ListModel";
 import User, { UserDoc } from "../models/UserModel";
 import { NotFoundError } from "../common/Errors";
@@ -7,7 +6,6 @@ import {
     GetAllListSchema,
     GetOneListSchema,
     CreateListSchema,
-    ModifyEventInListSchema,
     ModifyListSchema,
     DeleteOneListSchema,
 } from "../schemas/requests/ListSchema";
