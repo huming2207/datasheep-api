@@ -6,10 +6,10 @@ import { BaseModel } from "./BaseModel";
 
 export class Event extends BaseModel {
     @prop({ required: true })
-    public title!: string;
+    public title: string;
 
     @prop({ required: true })
-    public content!: string;
+    public content: string;
 
     @prop()
     public color?: number;
@@ -24,7 +24,7 @@ export class Event extends BaseModel {
     public assignedTo?: Ref<User>[];
 
     @prop({ required: true, ref: () => List })
-    public list!: Ref<List>;
+    public list: Ref<List>;
 
     @prop({ ref: () => [File] })
     public attachments?: Ref<File>[];
@@ -32,4 +32,3 @@ export class Event extends BaseModel {
 
 export type EventDoc = DocumentType<Event>;
 export const EventModel = getModelForClass(Event, { schemaOptions: { timestamps: true } });
-export default EventModel;

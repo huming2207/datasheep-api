@@ -8,8 +8,9 @@ export const CreateListSchema: FastifySchema = {
         properties: {
             title: { type: "string", minLength: 1, maxLength: 30 },
             color: { type: "integer", minimum: 0, maximum: 0xffffffff, optional: true }, // RGBA, 32-bit
+            project: { type: "string", minLength: 1 },
         },
-        required: ["title"],
+        required: ["title", "project"],
     },
     consumes: ["application/x-www-form-urlencoded", "application/json"],
     produces: ["application/json"],

@@ -7,7 +7,7 @@ export class BaseModel extends TimeStamps {
     public _id!: Types.ObjectId;
 
     @prop({ type: Number })
-    __v?: number;
+    __v?: string | number;
 
     @prop({ type: String })
     __t?: string | number;

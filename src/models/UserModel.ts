@@ -25,4 +25,3 @@ export class User extends Base<Types.ObjectId> {
 
 export type UserDoc = DocumentType<User>;
 export const UserModel = getModelForClass(User, { schemaOptions: { timestamps: true } });
-export default UserModel;

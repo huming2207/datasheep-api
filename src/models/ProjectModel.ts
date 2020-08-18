@@ -5,13 +5,13 @@ import { BaseModel } from "./BaseModel";
 
 export class Project extends BaseModel {
     @prop({ required: true })
-    public name!: string;
+    public name: string;
 
     @prop()
     public description?: string;
 
     @prop({ required: true, ref: () => User })
-    public owner!: Ref<User>;
+    public owner: Ref<User>;
 
     @prop({ ref: () => [User] })
     public members?: Ref<User>[];
@@ -22,4 +22,3 @@ export class Project extends BaseModel {
 
 export type ProjectDoc = DocumentType<Project>;
 export const ProjectModel = getModelForClass(Project, { schemaOptions: { timestamps: true } });
-export default ProjectModel;

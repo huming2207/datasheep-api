@@ -1,6 +1,6 @@
 import argon2 from "argon2";
 import jwt from "jsonwebtoken";
-import User, { UserDoc } from "../models/UserModel";
+import { UserDoc, UserModel } from "../models/UserModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import { BadRequestError, UnauthorisedError } from "../common/Errors";
 import { InternalError } from "../common/Errors";
@@ -15,7 +15,7 @@ const userRegister = async (
     const email = req.body.password;
 
     try {
-        const createdUser = await User.create({
+        const createdUser = await UserModel.create({
             username,
             password: await argon2.hash(password),
             email,
@@ -50,7 +50,9 @@ const userLogin = async (
 
     let user: UserDoc | null;
     try {
-        user = await User.findOne({ $or: [{ username }, { email: username }] }).select("+password");
+        user = await UserModel.findOne({ $or: [{ username }, { email: username }] }).select(
+            "+password",
+        );
         if (!user || !(await argon2.verify(user.password, password))) {
             throw new UnauthorisedError("Username or password is incorrect, try again");
         }

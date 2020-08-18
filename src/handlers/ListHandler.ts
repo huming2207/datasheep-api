@@ -1,6 +1,6 @@
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
-import List from "../models/ListModel";
-import User, { UserDoc } from "../models/UserModel";
+import { ListModel } from "../models/ListModel";
+import { UserModel } from "../models/UserModel";
 import { NotFoundError } from "../common/Errors";
 import {
     GetAllListSchema,
@@ -9,10 +9,11 @@ import {
     ModifyListSchema,
     DeleteOneListSchema,
 } from "../schemas/requests/ListSchema";
+import { ProjectModel } from "../models/ProjectModel";
 
 const getAllLists = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const user = await User.fromReq(req);
-    const lists = await List.find({ owner: user }).select(
+    const user = await UserModel.fromReq(req);
+    const lists = await ListModel.find({ owner: user }).select(
         "_id title description owner project -__v -events", // Filter out events (or it will be a super long response...)
     );
 
@@ -28,9 +29,9 @@ const getOneList = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const id = req.params.id;
-    const list = await List.findOne({ owner: user, _id: id }).select(
+    const list = await ListModel.findOne({ owner: user, _id: id }).select(
         "_id title description owner project events -__v",
     );
 
@@ -43,16 +44,21 @@ const getOneList = async (
 };
 
 const createList = async (
-    req: FastifyRequest<{ Body: { color?: number; title: string } }>,
+    req: FastifyRequest<{ Body: { color?: number; title: string; project: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const color = req.body.color || 0;
     const title = req.body.title;
-    const list = await List.create<{ title: string; color: number; owner: UserDoc }>({
+
+    const project = await ProjectModel.findOne({ name: req.body.project });
+    if (!project) throw new NotFoundError(`Project ${req.body.project} not found`);
+
+    const list = await ListModel.create({
         title,
         color,
         owner: user,
+        project: project._id,
     });
 
     reply.code(200).send({
@@ -70,12 +76,12 @@ const modifyList = async (
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const id = req.params["id"] as string;
 
-    const list = await List.findOne({ id, owner: user });
+    const list = await ListModel.findOne({ id, owner: user });
     if (!list) throw new NotFoundError("List not found");
-    await List.updateOne(list, {
+    await ListModel.updateOne(list, {
         title: req.body.title || list.title,
         description: req.body.description || list.description,
         color: req.body.color || list.color,
@@ -93,11 +99,11 @@ const deleteList = async (
     req: FastifyRequest<{ Params: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const id = req.params.id;
-    const list = await List.findOne({ id, owner: user });
+    const list = await ListModel.findOne({ id, owner: user });
     if (!list) throw new NotFoundError("List not found");
-    await List.deleteOne({ id, owner: user });
+    await ListModel.deleteOne({ id, owner: user });
     reply.code(200).send({
         message: "List deleted",
         data: {

@@ -1,6 +1,6 @@
-import User, { UserDoc } from "../models/UserModel";
-import Project from "../models/ProjectModel";
-import List from "../models/ListModel";
+import { UserDoc, UserModel } from "../models/UserModel";
+import { ProjectModel } from "../models/ProjectModel";
+import { ListModel } from "../models/ListModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
 import {
     CreateProjectSchema,
@@ -17,11 +17,15 @@ const createNewProject = async (
     req: FastifyRequest<{ Body: { name: string; description: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const name = req.body.name;
     const description = req.body.description;
 
-    const project = await Project.create<{ name: string; description: string; owner: UserDoc }>({
+    const project = await ProjectModel.create<{
+        name: string;
+        description: string;
+        owner: UserDoc;
+    }>({
         name,
         description,
         owner: user,
@@ -45,16 +49,16 @@ const modifyProject = async (
     }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const nameOrId = req.params.nameOrId;
-    const project = await Project.findOne({
+    const project = await ProjectModel.findOne({
         owner: user,
         $or: [{ id: nameOrId }, { name: nameOrId }],
     });
 
     if (!project) throw new NotFoundError("Project not found");
 
-    await Project.updateOne(project, {
+    await ProjectModel.updateOne(project, {
         name: req.body.name || project.name,
         description: req.body.description || project.description,
     });
@@ -70,8 +74,8 @@ const modifyProject = async (
 };
 
 const getAllProjects = async (req: FastifyRequest, reply: FastifyReply): Promise<void> => {
-    const user = await User.fromReq(req);
-    const projects = await Project.find({ owner: user }).select(
+    const user = await UserModel.fromReq(req);
+    const projects = await ProjectModel.find({ owner: user }).select(
         "name description owner members -__v",
     );
 
@@ -89,9 +93,9 @@ const getOneProject = async (
     req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const nameOrId = req.params.nameOrId;
-    const project = await Project.findOne({
+    const project = await ProjectModel.findOne({
         owner: user,
         $or: [{ id: nameOrId }, { name: nameOrId }],
     }).select("_id name description owner members lists -__v");
@@ -108,9 +112,9 @@ const getRelatedLists = async (
     req: FastifyRequest<{ Params: { name: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const name = req.params.name;
-    const project = await Project.findOne({ owner: user, name }).populate({
+    const project = await ProjectModel.findOne({ owner: user, name }).populate({
         path: "lists",
         select: "_id title description createdBy project events -__v",
     });
@@ -129,22 +133,22 @@ const addListToProject = async (
     req: FastifyRequest<{ Params: { name: string }; Body: { id: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const name = req.params.name;
     const listId = req.body.id;
 
-    const list = await List.findById(listId);
+    const list = await ListModel.findById(listId);
     if (!list) throw new NotFoundError(`List ${listId} not found`);
 
-    const project = await Project.findOne({ name, owner: user });
+    const project = await ProjectModel.findOne({ name, owner: user });
     if (!project) throw new NotFoundError(`Project ${name} not found`);
 
     if (list.project) {
-        await Project.updateOne(list.project, { $pull: { lists: list } });
+        await ProjectModel.updateOne(list.project, { $pull: { lists: list } });
     }
 
-    await List.updateOne(list, { project });
-    await Project.updateOne(project, { $push: { lists: list } });
+    await ListModel.updateOne(list, { project });
+    await ProjectModel.updateOne(project, { $push: { lists: list } });
 
     reply.code(200).send({
         message: "OK",
@@ -158,16 +162,16 @@ const deleteOneProject = async (
     req: FastifyRequest<{ Params: { nameOrId: string } }>,
     reply: FastifyReply,
 ): Promise<void> => {
-    const user = await User.fromReq(req);
+    const user = await UserModel.fromReq(req);
     const nameOrId = req.params.nameOrId;
-    const project = await Project.findOne({
+    const project = await ProjectModel.findOne({
         owner: user,
         $or: [{ id: nameOrId }, { name: nameOrId }],
     });
 
     if (!project) throw new NotFoundError(`Project "${nameOrId}" not found`);
 
-    await Project.deleteOne(project);
+    await ProjectModel.deleteOne(project);
 
     reply.code(200).send({
         message: "Project deleted",
