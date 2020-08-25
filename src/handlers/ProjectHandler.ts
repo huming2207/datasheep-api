@@ -1,4 +1,4 @@
-import { UserDoc, UserModel } from "../models/UserModel";
+import { UserModel } from "../models/UserModel";
 import { ProjectModel } from "../models/ProjectModel";
 import { ListModel } from "../models/ListModel";
 import { FastifyRequest, FastifyReply, FastifyInstance } from "fastify";
@@ -21,11 +21,7 @@ const createNewProject = async (
     const name = req.body.name;
     const description = req.body.description;
 
-    const project = await ProjectModel.create<{
-        name: string;
-        description: string;
-        owner: UserDoc;
-    }>({
+    const project = await ProjectModel.create({
         name,
         description,
         owner: user,
@@ -117,6 +113,9 @@ const getRelatedLists = async (
     const project = await ProjectModel.findOne({ owner: user, name }).populate({
         path: "lists",
         select: "_id title description createdBy project events -__v",
+        populate: {
+            path: "events",
+        },
     });
 
     if (!project) throw new NotFoundError(`Project "${name}" not found`);
