@@ -61,6 +61,8 @@ const createList = async (
         project: project._id,
     });
 
+    await ProjectModel.updateOne(project, { $push: { lists: list } });
+
     reply.code(200).send({
         message: "OK",
         data: {

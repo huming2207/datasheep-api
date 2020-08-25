@@ -51,6 +51,8 @@ const createEvent = async (
         list: list._id,
     });
 
+    await ListModel.updateOne(list, { $push: { events: event } });
+
     reply.code(200).send({
         message: "Event created",
         data: {
