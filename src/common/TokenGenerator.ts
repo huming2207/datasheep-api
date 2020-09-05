@@ -1,14 +1,14 @@
-import { customAlphabet } from "nanoid/async";
+import { customAlphabet } from "nanoid";
 
 const lut = "0123456789qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM";
 const lutSupp = "!@#$%^&*()_+-|\"':;<>,./?`~[]{}";
 
-export const generateDeviceToken = async (): Promise<string> => {
+export const generateDeviceToken = (): string => {
     const generate = customAlphabet(lut, 20);
     return generate();
 };
 
-export const generateAuthToken = async (): Promise<string> => {
+export const generateAuthToken = (): string => {
     const generate = customAlphabet(lut + lutSupp, 10);
     return generate();
 };
