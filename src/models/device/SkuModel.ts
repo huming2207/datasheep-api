@@ -2,11 +2,8 @@ import { BaseModel } from "../BaseModel";
 import { prop, DocumentType, getModelForClass } from "@typegoose/typegoose";
 
 export class Sku extends BaseModel {
-    @prop({ required: true })
+    @prop({ required: true, index: true, unique: true })
     public name: string;
-
-    @prop({ required: true })
-    public partNum: string;
 }
 
 export type SkuDoc = DocumentType<Sku>;
