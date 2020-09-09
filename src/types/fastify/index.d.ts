@@ -1,5 +1,6 @@
 import { FastifySchema } from "fastify";
 import { JSONSchema7 } from "json-schema";
+import { Types } from "mongoose";
 
 declare module "fastify" {
     export interface FastifySchema {
@@ -15,5 +16,9 @@ declare module "fastify" {
         params?: JSONSchema7 | unknown;
         headers?: JSONSchema7 | unknown;
         response?: JSONSchema7 | unknown;
+    }
+
+    export interface FastifyRequest {
+        deviceId?: Types.ObjectId | string;
     }
 }
