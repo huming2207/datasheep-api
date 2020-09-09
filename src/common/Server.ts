@@ -5,7 +5,7 @@ import FastifyFormBody from "fastify-formbody";
 import FastifyJwt from "fastify-jwt";
 import Middie from "middie";
 import AuthHandler from "../handlers/AuthHandler";
-import ProtectedRequests from "../handlers/ProtectedRequests";
+import ProtectedRequests from "../handlers/UserProtectedRequests";
 import { connectToDb } from "./Database";
 
 export const buildFastify = async (): Promise<FastifyInstance> => {

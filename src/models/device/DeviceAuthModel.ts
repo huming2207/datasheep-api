@@ -1,6 +1,6 @@
 import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose";
 import { Base } from "@typegoose/typegoose/lib/defaultClasses";
-import { Device } from "./DeviceModel";
+import { Device, DeviceDoc } from "./DeviceModel";
 import { generateAuthToken } from "../../common/TokenGenerator";
 
 export class DeviceAuth extends Base {
@@ -11,7 +11,7 @@ export class DeviceAuth extends Base {
     public expireAt: Date;
 
     @prop({ ref: () => Device })
-    public device: Ref<Device>;
+    public device: Ref<DeviceDoc>;
 }
 
 export type DeviceAuthDoc = DocumentType<DeviceAuth>;
