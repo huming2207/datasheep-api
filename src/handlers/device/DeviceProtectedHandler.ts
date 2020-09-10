@@ -1,6 +1,7 @@
 import { FastifyRequest, FastifyInstance } from "fastify";
 import { UnauthorisedError } from "../../common/Errors";
 import { DeviceAuthModel } from "../../models/device/DeviceAuthModel";
+import DeviceHandler from "./DeviceHandler";
 
 const onProtectedRequest = async (req: FastifyRequest): Promise<void> => {
     const header = req.raw.headers.authorization;
@@ -15,7 +16,7 @@ const onProtectedRequest = async (req: FastifyRequest): Promise<void> => {
         throw new UnauthorisedError("Token expired");
     }
 
-    const deviceId = auth.populated("device");
+    const deviceId = auth.populated("device") as string | undefined;
     if (!deviceId) {
         req.deviceId = auth.device; // Device is unpopulated
     } else {
@@ -25,4 +26,5 @@ const onProtectedRequest = async (req: FastifyRequest): Promise<void> => {
 
 export default async function bootstrap(instance: FastifyInstance): Promise<void> {
     instance.addHook("onRequest", onProtectedRequest);
+    await instance.register(DeviceHandler);
 }
