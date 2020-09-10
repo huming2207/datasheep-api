@@ -1,8 +1,9 @@
 import { FastifyInstance, FastifyRequest, FastifyReply } from "fastify";
-import { UserModel } from "../models/UserModel";
-import { SkuModel } from "../models/device/SkuModel";
-import { DeviceModel } from "../models/device/DeviceModel";
-import { BadRequestError, InternalError } from "../common/Errors";
+import { UserModel } from "../../models/UserModel";
+import { SkuModel } from "../../models/device/SkuModel";
+import { DeviceModel } from "../../models/device/DeviceModel";
+import { BadRequestError, InternalError } from "../../common/Errors";
+import { RegisterDeviceSchema } from "../../schemas/requests/DeviceSchema";
 
 export const registerDevice = async (
     req: FastifyRequest<{ Body: { chipId: string; firmware: string; sku: string } }>,
@@ -37,4 +38,5 @@ export const registerDevice = async (
 };
 
 export default async function bootstrap(instance: FastifyInstance): Promise<void> {
+    instance.post("/device/create", { schema: RegisterDeviceSchema }, registerDevice);
 }
