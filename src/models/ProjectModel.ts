@@ -4,7 +4,7 @@ import { prop, getModelForClass, DocumentType, Ref } from "@typegoose/typegoose"
 import { BaseModel } from "./BaseModel";
 
 export class Project extends BaseModel {
-    @prop({ required: true })
+    @prop({ required: true, unique: true })
     public name: string;
 
     @prop()

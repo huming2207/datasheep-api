@@ -6,13 +6,13 @@ import { ModelType } from "@typegoose/typegoose/lib/types";
 import { UnauthorisedError } from "../common/Errors";
 
 export class User extends Base<Types.ObjectId> {
-    @prop({ required: true })
+    @prop({ required: true, unique: true })
     public username!: string;
 
     @prop({ required: true, select: false })
     public password!: string;
 
-    @prop({ required: true })
+    @prop({ required: true, unique: true })
     public email!: string;
 
     public static async fromReq(this: ModelType<User>, req: FastifyRequest): Promise<UserDoc> {
